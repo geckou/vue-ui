@@ -1,0 +1,29 @@
+{
+  "name": "@geckou/vue-form-components",
+  "version": "1.0.0",
+  "main": "dist/vue-form-components.cjs.js",
+  "module": "dist/vue-form-components.esm.js",
+  "type": "module",
+  "repository": "github-geckou:geckou/vue-form-components.git",
+  "author": "geckou-shogo <shogo.nojima@geckou.net>",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^3.4.31"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "eslint": "^9.7.0",
+    "eslint-plugin-vue": "^9.27.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.3"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint src --ext .ts,.vue",
+    "pack": "npm run build && npm pack"
+  }
+}

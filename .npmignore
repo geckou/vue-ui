@@ -1,0 +1,9 @@
+node_modules
+src
+dev
+.vscode
+*.config.ts
+*.config.mts
+tsconfig.json
+.eslintrc.js
+index.html
