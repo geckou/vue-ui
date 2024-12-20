@@ -1,23 +1,26 @@
 module.exports = {
-  root: true,
-  env: {
-    node: true,
-  },
-  parser: 'vue-eslint-parser',
+  root         : true,
+  parser       : 'vue-eslint-parser',
   parserOptions: {
-    parser: '@typescript-eslint/parser',
-    ecmaVersion: 2020,
-    sourceType: 'module',
+    parser             : '@typescript-eslint/parser',
+    ecmaVersion        : 2020,
+    sourceType         : 'module',
+    extraFileExtensions: ['.vue'],
+  },
+  env: {
+    browser: true,
+    node   : true,
   },
   extends: [
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended',
   ],
+  plugins: [
+    'vue',
+    '@typescript-eslint',
+  ],
   rules: {
-    'vue/html-indent': ['error', 2],
-    '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
     'arrow-parens': ['error', 'as-needed'],
     curly         : ['error', 'multi-line'],
     'comma-dangle': ['error', 'always-multiline'],
@@ -27,14 +30,14 @@ module.exports = {
     'no-multi-spaces': ['error', {
       exceptions: { VariableDeclarator: true },
     }],
-    'no-floating-decimal'           : 'off',
     'space-before-function-paren'   : ['error', 'never'],
     'vue/multi-word-component-names': 'off',
     'vue/attribute-hyphenation'     : ['error', 'never', {
       ignore: ['custom-prop'],
     }],
     'vue/v-on-event-hyphenation': ['error', 'never', {
-      'autofix': false,
+      autofix: false,
     }],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
 }

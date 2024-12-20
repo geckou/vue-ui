@@ -1,41 +1,95 @@
 <script lang="ts" setup>
-import { defineComponent, ref, watch } from 'vue'
+import type {
+  Validates,
+  InputBoxStyleForEachStatus,
+} from '@/types'
+import {
+  ref,
+  watch,
+} from 'vue'
+import InputBox from '@/components/InputBox.vue'
+import ErrorMessages from '@/components/ErrorMessages.vue'
 
-const inputValue = ref('')
+type InputValue = string | number
 
-watch(() => inputValue.value, (value) => {
-  
+const emit = defineEmits<{ (e: 'update:modelValue', newValue: InputValue): void }>()
+
+const props = withDefaults(defineProps<{
+  modelValue: InputValue
+  name: string
+  cssStyle?: InputBoxStyleForEachStatus
+  type? : string
+  placeholder?: string
+  isDisabled? : boolean
+  isRequired?: boolean
+  maxLength?: number
+  autocomplete?: string
+  validates?: Validates
+  baseErrorMessage?: string
+  isDisabledErrorMessage?: boolean
+}>(), {
+  cssStyle        : () => ({ default: {} }),
+  type            : 'text',
+  placeholder     : '入力してください',
+  maxLength       : 30,
+  autocomplete    : 'off',
+  validates       : () => [],
+  baseErrorMessage: '入力値が不正です',
 })
 
+const inputValue = ref<InputValue>(props.modelValue)
+const errorMessages = ref<Array<string>>([])
+
+const convertFullWidthToHalfWidth = (str:string): string => {
+  const fullWidthRegEx = /[Ａ-Ｚａ-ｚ０-９]/g
+  return str.replace(fullWidthRegEx, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+}
+
+const validateValue = (value: InputValue) => {
+  errorMessages.value = []
+  if (!inputValue.value && props.isRequired) errorMessages.value.push('必須項目です')
+  if (!props.validates.length) return
+
+  props.validates.forEach(validate => {
+    if (!validate.regex.test(String(value))) errorMessages.value.push(validate.message)
+  })
+}
+
+watch(() => props.modelValue, newValue => inputValue.value = newValue, { immediate: true })
+
+watch(() => inputValue.value, newValue => {
+  validateValue(newValue)
+  emit('update:modelValue', Number.isInteger(newValue) ? Number(newValue) : convertFullWidthToHalfWidth(newValue.toString()))
+}, { immediate: !!props.modelValue })
 </script>
 
 <template>
-  <InputBox class="text-box">
+  <InputBox
+    :cssStyle="cssStyle"
+    :class="$style.text_box"
+  >
+    <slot name="before" />
     <input
-      :type="type"
       v-model="inputValue"
-      @input="$emit('update:modelValue', inputValue)"
-      class="input"
-    />
+      :type="type"
+      :required="isRequired"
+      :name="name"
+      :placeholder="placeholder"
+      :disabled="isDisabled"
+      :autocomplete="autocomplete"
+      :maxlength="maxLength"
+    >
+    <slot name="after" />
+    <ErrorMessages v-if="!isDisabledErrorMessage" />
   </InputBox>
 </template>
 
+<style lang="scss" module>
+:is(.text_box) {
+  display: inline-flex;
 
-
-<style scoped>
-.text-box {
-  margin-bottom: 1rem;
-}
-.label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-.input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  width: 100%;
-  box-sizing: border-box;
+  > input {
+    flex: 1 1 auto;
+  }
 }
 </style>

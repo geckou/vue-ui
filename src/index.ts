@@ -1,12 +1,18 @@
 import { App } from 'vue'
-import TextBox from './components/TextBox.vue'
-import TextArea from './components/TextArea.vue'
+import TextBox from '@/components/TextBox.vue'
+import TextArea from '@/components/TextArea.vue'
+import BasicButton from '@/components/BasicButton.vue'
+import SelectBox from '@/components/SelectBox.vue'
+import CheckBox from '@/components/CheckBox.vue'
+import RadioButtons from '@/components/RadioButtons.vue'
 
 export default {
   install(app: App) {
-    app.component('GcTextBox', TextBox)
-    app.component('GcTextArea', TextArea)
-  }
+    app.component('GKTextBox', TextBox)
+    app.component('GKTextArea', TextArea)
+    app.component('GKBasicButton', BasicButton)
+    app.component('GKSelectBox', SelectBox)
+    app.component('GKCheckBox', CheckBox)
+    app.component('GKRadioButtons', RadioButtons)
+  },
 }
-
-export { TextBox }

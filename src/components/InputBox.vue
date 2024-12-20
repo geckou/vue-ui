@@ -1,91 +1,49 @@
 <script setup lang="ts">
+import type {
+  StateVariation,
+  InputBoxStyle,
+  InputBoxStyleForEachStatus,
+} from '@/types'
 import {
   ref,
   computed,
 } from 'vue'
 
-type InputVariation = 'default' | 'error' | 'disabled' | 'valid'
-
-type ColorStyle = {
-  text: string
-  border: string
-  background: string
-}
+const props = defineProps<{
+  cssStyle?: InputBoxStyleForEachStatus
+  isErrored?: boolean
+  isDisabled?: boolean
+}>()
 
 const inputBox = ref<HTMLElement | null>(null)
-const color = {
-  white: '#FFFFFF',
-  black: '#555555',
-  red  : '#FF0000',
-}
 
-const props = withDefaults(defineProps<{
-  errorMessages?: Array<string>
-  isValid?: boolean
-  isDisabled?: boolean
-  style?: {
-    border?: {
-      size?: string
-      radius?: string
-    }
-    boxShadow?: string
-    color?: Record<InputVariation, ColorStyle>
-    error?: Record<string, string>
-    focus?: Record<string, string>
-  }
-}>(), {
-  errorMessages: [],
-  style: {
-    border: {
-      size: '1px',
-      radius: '.5rem'
-    },
-    boxShadow: 'none',
-    color: {
-      default: {
-        text: color.black,
-        border: 'var(--input-border-color)',
-        background: color.white,
-      },
-      valid: {
-        text: color.black,
-        border: 'var(--input-border-color)',
-        background: color.white,
-      },
-      error: {
-        text: color.black,
-        border: color.red,
-        background: color.white,
-      },
-      disabled: {
-        text: color.black,
-        border: 'var(--input-border-color)',
-        background: color.white,
-      },
-    },
-    error: {
-      color: color.red
-    },
-    focus: {
-      color: color.black
-    }
-  }
+const isFocused = computed<boolean>(() => {
+  return inputBox.value ?
+    inputBox.value.matches(':has(*:focus), :has(*:valid)') :
+    false
 })
 
-const variant = computed<InputVariation>(() => {
-  if (props.errorMessages?.length) return 'error'
+const isInvalid = computed<boolean>(() => {
+  return inputBox.value ?
+    inputBox.value.matches(':has(*:not(:placeholder-shown)), :has(*:autofill), :has(*:invalid)') :
+    false
+})
+
+const isValid = computed<boolean>(() => {
+  return inputBox.value ?
+    inputBox.value.matches(':has(*:valid)') :
+    false
+})
+
+const variant = computed<StateVariation>(() => {
+  if (props.isErrored || isInvalid.value) return 'error'
   else if (props.isDisabled) return 'disabled'
-  else if (props.isValid) return 'valid'
+  else if (isValid.value) return 'valid'
+  else if (isFocused.value) return 'focus'
   else return 'default'
 })
 
-const errorStyle = computed<Record<string, string>>(() => props.errorMessages?.length ? props.style.error : {})
-
-const focusStyle = computed<Record<string, string>>(() => {
-  if (!inputBox.value) return {}
-  else if (inputBox.value.matches(':has(*:focus)') || inputBox.value.matches(':has(*:valid)')) return props.style.focus
-  else return {}
-})
+const currentStyle = computed<InputBoxStyle | undefined>(() => props.cssStyle?.[variant.value as StateVariation])
 </script>
 
 <template>
@@ -93,79 +51,61 @@ const focusStyle = computed<Record<string, string>>(() => {
     ref="inputBox"
     :class="$style.input_box"
     :style="{
-      '--text-color': props.style.color[variant].text,
-      '--border-color': props.style.color[variant].border,
-      '--background-color': props.style.color[variant].background,
-      '--border-size': props.style.border.size,
-      '--radius-size': props.style.border.radius,
-      '--box-shadow': props.style.boxShadow,
-      errorStyle,
-      focusStyle,
+      '--text-color': currentStyle?.textColor || '#333',
+      '--placeholder-color': currentStyle?.placeholderColor || '#999',
+      '--border-color': currentStyle?.border?.color || '#ccc',
+      '--background-color': currentStyle?.backgroundColor || 'inherit',
+      '--border-size': currentStyle?.border?.size || '1px',
+      '--radius-size': currentStyle?.border?.radius || '0.25rem',
+      '--box-shadow': currentStyle?.boxShadow || 'none',
     }"
   >
     <slot />
-    <span
-      v-if="errorMessages.length"
-      :class="$style.error_messages"
-    >
-      <span
-        v-for="message in errorMessages"
-        :key="message"
-      >
-        {{ message }}
-      </span>
-    </span>
   </div>
 </template>
 
-<style module>
-.input_box {
-  display       : inline-block;
-  padding-inline: .5rem;
-  position      : relative;
-}
-
-.input_box.disabled {
-  pointer-events: none;
-  cursor: not-allowed;
-}
-
-:is(
-  .input_box:has(*:not(:placeholder-shown)),
-  .input_box:has(*:autofill),
-).input_box:has(*:invalid) {
-  box-shadow: none;
-}
-
-.error_messages {
-  position: absolute;
-  top     : calc(100% - .5rem);
-  left    : .5rem;
-}
-
-:is(
-  .error_messages::before,
-  .error_messages::after,
-) {
-  content         : '';
-  display         : block;
+<style lang="scss" module>
+:is(.input_box) {
+  display: inline-flex;
+  max-inline-size: 100%;
   background-color: var(--background-color);
-  inline-size     : .5rem;
-  block-size      : .25;
-  clip-path       : polygon(50% 0%, 100% 100%, 0% 100%);
-  position        : absolute;
-  bottom          : 100%;
-}
+  border: var(--border-size) solid var(--border-color);
+  border-radius: var(--radius-size);
+  color: var(--text-color);
+  position: relative;
 
-.error_messages::before {
-  inline-size     : calc(.5rem + 2px);
-  block-size      : calc(.25rem + 1px);
-  background-color: var(--border-color);
-  left            : calc(.5rem - 1px);
-}
+  > input,
+  > textarea,
+  > select {
+    inline-size: 100%;
+    padding: .5rem 1rem;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    appearance: none;
+  }
 
-.error_messages::after {
-  background-color: var(--background-color);
-  left            : .5rem;
+  *::placeholder {
+    color: var(--placeholder-color);
+    font-weight: normal;
+  }
+
+  *:focus,
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  &:has(> *:disabled) {
+    pointer-events: none !important;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: all;
+      cursor: not-allowed !important;
+    }
+  }
 }
 </style>
