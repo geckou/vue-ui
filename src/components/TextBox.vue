@@ -25,16 +25,13 @@ const props = withDefaults(defineProps<{
   maxLength?: number
   autocomplete?: string
   validates?: Validates
-  baseErrorMessage?: string
-  isDisabledErrorMessage?: boolean
 }>(), {
-  cssStyle        : () => ({ default: {} }),
-  type            : 'text',
-  placeholder     : '入力してください',
-  maxLength       : 30,
-  autocomplete    : 'off',
-  validates       : () => [],
-  baseErrorMessage: '入力値が不正です',
+  cssStyle    : () => ({ default: {} }),
+  type        : 'text',
+  placeholder : '入力してください',
+  maxLength   : 30,
+  autocomplete: 'off',
+  validates   : () => [],
 })
 
 const inputValue = ref<InputValue>(props.modelValue)
@@ -80,7 +77,7 @@ watch(() => inputValue.value, newValue => {
       :maxlength="maxLength"
     >
     <slot name="after" />
-    <ErrorMessages v-if="!isDisabledErrorMessage" />
+    <ErrorMessages v-show="errorMessages.length" />
   </InputBox>
 </template>
 

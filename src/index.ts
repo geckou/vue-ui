@@ -6,6 +6,13 @@ import SelectBox from '@/components/SelectBox.vue'
 import CheckBox from '@/components/CheckBox.vue'
 import RadioButtons from '@/components/RadioButtons.vue'
 
+export { TextBox as GKTextBox }
+export { TextArea as GKTextArea }
+export { BasicButton as GKBasicButton }
+export { SelectBox as GKSelectBox }
+export { CheckBox as GKCheckBox }
+export { RadioButtons as GKRadioButtons }
+
 export default {
   install(app: App) {
     app.component('GKTextBox', TextBox)

@@ -21,21 +21,19 @@ const props = withDefaults(defineProps<{
   placeholder?: string
   isDisabled? : boolean
   isRequired?: boolean
+  rows?: number
   maxLength?: number
   autocomplete?: string
   validates?: Validates
-  baseErrorMessage?: string
-  isDisabledErrorMessage?: boolean
 }>(), {
-  cssStyle             : () => ({ default: {} }),
-  isRequired           : false,
-  placeholder          : '入力してください',
-  maxLength            : 100,
-  isDisabled           : false,
-  autocomplete         : 'off',
-  validates            : () => [],
-  formValidationManager: null,
-  baseErrorMessage     : '入力値が不正です',
+  cssStyle    : () => ({ default: {} }),
+  isRequired  : false,
+  placeholder : '入力してください',
+  rows        : 3,
+  maxLength   : 100,
+  isDisabled  : false,
+  autocomplete: 'off',
+  validates   : () => [],
 })
 
 const inputValue = ref<InputValue>(props.modelValue)
@@ -76,9 +74,10 @@ watch(() => inputValue.value, newValue => {
       :placeholder="placeholder"
       :disabled="isDisabled"
       :autocomplete="autocomplete"
+      :rows="rows"
       :maxlength="maxLength"
     />
-    <ErrorMessages v-if="!isDisabledErrorMessage" />
+    <ErrorMessages v-show="errorMessages.length" />
   </InputBox>
 </template>
 
