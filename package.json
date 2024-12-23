@@ -1,6 +1,6 @@
 {
   "name": "@geckou/vue-ui-components",
-  "version": "0.0.2",
+  "version": "0.0.11",
   "description": "A set of reusable Vue UI components by Geckou",
   "main": "dist/vue-ui-components.cjs.js",
   "module": "dist/vue-ui-components.esm.js",
@@ -8,7 +8,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/geckou/vue-ui-components.git"
+    "url": "git+https://github.com/geckou/vue-ui-components.git"
   },
   "author": "geckou-shogo <shogo.nojima@geckou.net>",
   "license": "MIT",
@@ -22,9 +22,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "peerDependencies": {
-    "vue": "^3.4.0"
-  },
+  "peerDependencies": {},
   "devDependencies": {
     "@types/node": "^20.14.10",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
@@ -33,16 +31,20 @@
     "@vue/runtime-core": "^3.5.13",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.27.0",
+    "rollup-plugin-postcss": "^4.0.2",
     "sass": "^1.83.0",
     "typescript": "5.5.3",
     "vite": "^5.3.3",
-    "vite-plugin-dts": "^4.4.0"
+    "vite-plugin-dts": "^4.4.0",
+    "vite-plugin-singlefile": "^2.1.0",
+    "vue": "^3.5.13"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint src --ext .ts,.vue",
-    "pack": "npm run build && npm pack"
+    "pack": "npm run build && npm pack",
+    "publish": "vite build && npm publish"
   },
   "resolutions": {
     "eslint": "^8.57.1"
