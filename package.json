@@ -2,6 +2,7 @@
   "name": "@geckou/vue-ui-components",
   "version": "0.0.1",
   "main": "dist/vue-ui-components.cjs.js",
+  "types": "dist/index.d.ts",
   "module": "dist/vue-ui-components.esm.js",
   "type": "module",
   "repository": "github-geckou:geckou/vue-ui-components.git",
@@ -27,7 +28,9 @@
     "eslint-plugin-vue": "^9.27.0",
     "sass": "^1.83.0",
     "typescript": "5.5.3",
-    "vite": "^5.3.3"
+    "vite": "^5.3.3",
+    "vite-plugin-dts": "^4.4.0",
+    "vue": "^3.5.13"
   },
   "scripts": {
     "dev": "vite",
