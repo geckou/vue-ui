@@ -1,6 +1,6 @@
 {
   "name": "@geckou/vue-ui-components",
-  "version": "0.0.12",
+  "version": "0.0.15",
   "description": "A set of reusable Vue UI components by Geckou",
   "main": "dist/vue-ui-components.cjs.js",
   "module": "dist/vue-ui-components.esm.js",
@@ -44,7 +44,7 @@
     "build": "vite build",
     "lint": "eslint src --ext .ts,.vue",
     "pack": "npm run build && npm pack",
-    "publish": "vite build && npm publish"
+    "publish": "npm version patch && vite build && npm publish"
   },
   "resolutions": {
     "eslint": "^8.57.1"

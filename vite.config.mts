@@ -1,17 +1,9 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import dts from 'vite-plugin-dts'
 import { resolve } from 'path'
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    dts({
-      tsconfigPath    : './tsconfig.json',
-      outDir          : 'dist',
-      insertTypesEntry: true,
-    }),
-  ],
+  plugins: [vue()],
 
   server: {
     host: '0.0.0.0',
@@ -22,8 +14,14 @@ export default defineConfig({
     lib: {
       entry   : resolve(__dirname, 'src/index.ts'),
       name    : 'VueUIComponents',
-      fileName: format => `vue-ui-components.${format}.js`,
+      formats : ['es', 'cjs'],
+      fileName: format => {
+        if (format === 'es') return 'vue-ui-components.esm.js'
+        if (format === 'cjs') return 'vue-ui-components.cjs.js'
+        return `vue-ui-components.${format}.js`
+      },
     },
+    cssCodeSplit : true,
     rollupOptions: {
       external: ['vue'],
       output  : {
@@ -35,19 +33,19 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ['vue'],
+    include: ['vue'], // Vueを事前バンドル
   },
   
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': resolve(__dirname, 'src'), // @エイリアスの設定
     },
   },
 
   css: {
     preprocessorOptions: {
       scss: {
-        api: "modern-compiler",
+        api: "modern-compiler", // SCSSモダンコンパイラ設定
       },
     },
   },
