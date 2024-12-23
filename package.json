@@ -1,6 +1,6 @@
 {
   "name": "@geckou/vue-ui-components",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A set of reusable Vue UI components by Geckou",
   "main": "dist/vue-ui-components.cjs.js",
   "module": "dist/vue-ui-components.esm.js",
