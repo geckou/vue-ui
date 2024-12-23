@@ -1,11 +1,15 @@
 {
   "name": "@geckou/vue-ui-components",
   "version": "0.0.1",
+  "description": "A set of reusable Vue UI components by Geckou",
   "main": "dist/vue-ui-components.cjs.js",
-  "types": "dist/index.d.ts",
   "module": "dist/vue-ui-components.esm.js",
+  "types": "dist/index.d.ts",
   "type": "module",
-  "repository": "github-geckou:geckou/vue-ui-components.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geckou/vue-ui-components.git"
+  },
   "author": "geckou-shogo <shogo.nojima@geckou.net>",
   "license": "MIT",
   "engines": {
@@ -15,6 +19,9 @@
     "dist",
     "README.md"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "peerDependencies": {
     "vue": "^3.4.0"
   },
@@ -29,15 +36,13 @@
     "sass": "^1.83.0",
     "typescript": "5.5.3",
     "vite": "^5.3.3",
-    "vite-plugin-dts": "^4.4.0",
-    "vue": "^3.5.13"
+    "vite-plugin-dts": "^4.4.0"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint src --ext .ts,.vue",
-    "pack": "npm run build && npm pack",
-    "postinstall": "vite build"
+    "pack": "npm run build && npm pack"
   },
   "resolutions": {
     "eslint": "^8.57.1"
