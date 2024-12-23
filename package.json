@@ -36,7 +36,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint src --ext .ts,.vue",
-    "pack": "npm run build && npm pack"
+    "pack": "npm run build && npm pack",
+    "postinstall": "yarn build"
   },
   "resolutions": {
     "eslint": "^8.57.1"
