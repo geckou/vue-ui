@@ -1,10 +1,10 @@
 {
   "name": "@geckou/vue-ui-components",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "description": "A set of reusable Vue UI components by Geckou",
-  "main": "dist/index.ts",
-  "module": "dist/index.ts",
-  "types": "dist/types/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
   "scripts": {
     "dev": "vite",
     "clean": "rm -rf dist",
-    "build": "yarn clean && mkdir -p dist && rsync -av --exclude 'main.ts' --exclude 'App.vue' src/ dist/",
+    "build": "yarn clean && tsc && mkdir -p dist && rsync -av --exclude 'main.ts' --exclude 'index.ts' --exclude 'App.vue' src/ dist/",
     "lint": "eslint src --ext .ts,.vue",
     "prepublishOnly": "yarn build"
   }
