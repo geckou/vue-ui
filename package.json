@@ -1,10 +1,10 @@
 {
   "name": "@geckou/vue-ui-components",
-  "version": "0.0.15",
+  "version": "0.0.55",
   "description": "A set of reusable Vue UI components by Geckou",
-  "main": "dist/vue-ui-components.cjs.js",
-  "module": "dist/vue-ui-components.esm.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.ts",
+  "module": "dist/index.ts",
+  "types": "dist/types/index.d.ts",
   "type": "module",
   "repository": {
     "type": "git",
@@ -22,31 +22,25 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
   "devDependencies": {
-    "@types/node": "^20.14.10",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0",
+    "@types/node": "^22.10.2",
     "@vitejs/plugin-vue": "^5.0.5",
-    "@vue/runtime-core": "^3.5.13",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.27.0",
-    "rollup-plugin-postcss": "^4.0.2",
     "sass": "^1.83.0",
-    "typescript": "5.5.3",
+    "typescript": "^5.5.3",
     "vite": "^5.3.3",
     "vite-plugin-dts": "^4.4.0",
-    "vite-plugin-singlefile": "^2.1.0",
     "vue": "^3.5.13"
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "clean": "rm -rf dist",
+    "build": "yarn clean && mkdir -p dist && rsync -av --exclude 'main.ts' --exclude 'App.vue' src/ dist/",
     "lint": "eslint src --ext .ts,.vue",
-    "pack": "npm run build && npm pack",
-    "publish": "npm version patch && vite build && npm publish"
-  },
-  "resolutions": {
-    "eslint": "^8.57.1"
+    "prepublishOnly": "yarn build"
   }
 }
