@@ -63,7 +63,7 @@ watch(() => inputValue.value, newValue => {
 <template>
   <InputBox
     :cssStyle="cssStyle"
-    :class="$style.text_box"
+    class="text_box"
   >
     <slot name="before" />
     <input

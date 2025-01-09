@@ -10,42 +10,20 @@ export default defineConfig({
     port: 5555,
   },
 
-  build: {
-    lib: {
-      entry   : resolve(__dirname, 'src/index.ts'),
-      name    : 'VueUIComponents',
-      formats : ['es', 'cjs'],
-      fileName: format => {
-        if (format === 'es') return 'vue-ui-components.esm.js'
-        if (format === 'cjs') return 'vue-ui-components.cjs.js'
-        return `vue-ui-components.${format}.js`
-      },
-    },
-    cssCodeSplit : true,
-    rollupOptions: {
-      external: ['vue'],
-      output  : {
-        globals: {
-          vue: 'Vue',
-        },
-      },
-    },
-  },
-
   optimizeDeps: {
-    include: ['vue'], // Vueを事前バンドル
+    include: ['vue'],
   },
   
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'), // @エイリアスの設定
+      '@': resolve(__dirname, 'src'),
     },
   },
 
   css: {
     preprocessorOptions: {
       scss: {
-        api: "modern-compiler", // SCSSモダンコンパイラ設定
+        api: 'modern-compiler',
       },
     },
   },

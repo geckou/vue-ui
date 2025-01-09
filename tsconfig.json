@@ -1,28 +1,15 @@
 {
   "compilerOptions": {
-    "types": ["@vue/runtime-core"],
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "target": "ESNext",                // 出力するJavaScriptのターゲット
+    "module": "ESNext",               // ESモジュール形式
+    "moduleResolution": "node",       // Node.js互換のモジュール解決
+    "declaration": true,              // 型定義ファイル（.d.ts）の生成
+    "outDir": "dist",                 // 出力先ディレクトリ
+    "strict": true,                   // 厳格モード
+    "esModuleInterop": true,          // ESモジュールとCommonJSの互換性
+    "skipLibCheck": true,             // ライブラリチェックをスキップ
+    "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx",
-  ],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"],            // コンパイル対象のファイル
+  "exclude": ["node_modules", "dist", "src/main.ts", "src/App.vue"]
 }
