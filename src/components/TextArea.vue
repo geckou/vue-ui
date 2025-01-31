@@ -8,15 +8,15 @@ import {
   watch,
 } from 'vue'
 import InputBox from '@/components/InputBox.vue'
-import ErrorMessages from '@/components/ErrorMessages.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 type InputValue = string | null
 
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: InputValue): void }>()
 
 const props = withDefaults(defineProps<{
-  modelValue: InputValue
   name: string
+  modelValue?: InputValue
   cssStyle?: InputBoxStyleForEachStatus
   placeholder?: string
   isDisabled? : boolean
@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<{
   autocomplete?: string
   validates?: Validates
 }>(), {
+  modelValue  : undefined,
   cssStyle    : () => ({ default: {} }),
   isRequired  : false,
   placeholder : '入力してください',
@@ -36,7 +37,7 @@ const props = withDefaults(defineProps<{
   validates   : () => [],
 })
 
-const inputValue = ref<InputValue>(props.modelValue)
+const inputValue = ref<InputValue>(props.modelValue ?? '')
 const errorMessages = ref<Array<string>>([])
 
 const validateValue = (value: InputValue) => {
@@ -48,7 +49,7 @@ const validateValue = (value: InputValue) => {
   })
 }
 
-watch(() => props.modelValue, newValue => inputValue.value = newValue)
+watch(() => props.modelValue, newValue => inputValue.value = newValue ?? '', { immediate: true })
 
 watch(() => inputValue.value, newValue => {
   if (newValue === null) {
@@ -58,7 +59,7 @@ watch(() => inputValue.value, newValue => {
   }
 
   validateValue(newValue)
-  emit('update:modelValue', newValue)
+  if (props.modelValue !== undefined) emit('update:modelValue', newValue)
 }, { immediate: !!props.modelValue })
 </script>
 
@@ -77,7 +78,7 @@ watch(() => inputValue.value, newValue => {
       :rows="rows"
       :maxlength="maxLength"
     />
-    <ErrorMessages v-show="errorMessages.length" />
+    <ErrorMessage v-show="errorMessages.length" />
   </InputBox>
 </template>
 

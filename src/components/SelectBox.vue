@@ -8,7 +8,7 @@ import {
   watch,
 } from 'vue'
 import InputBox from '@/components/InputBox.vue'
-import ErrorMessages from '@/components/ErrorMessages.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 import KeyboardArrowDownIcon from '@/components/Icon/KeyboardArrowDownIcon.vue'
 
 type SelectValue = string | number
@@ -16,15 +16,16 @@ type SelectValue = string | number
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: SelectValue): void }>()
 
 const props = withDefaults(defineProps<{
-  modelValue: SelectValue
-  options : Array<Option>
+  options : Array<Option | Record<string, Option[]>>
   name: string
+  modelValue?: SelectValue
   cssStyle?: InputBoxStyleForEachStatus
   placeholder?: string
   canOmitSelect?: boolean
   isDisabled? : boolean
   isRequired?: boolean
 }>(), {
+  modelValue : undefined,
   cssStyle   : () => ({ default: {} }),
   placeholder: '選択してください',
 })
@@ -32,16 +33,25 @@ const props = withDefaults(defineProps<{
 const errorMessages = ref<Array<string>>([])
 const selectedValue = ref<SelectValue>(props.modelValue ?? '')
 
+const isOption = (obj: any): obj is Option => {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    typeof obj.label === 'string' &&
+    'value' in obj
+  )
+}
+
 const validateValue = () => {
   errorMessages.value = []
   if (!selectedValue.value && props.isRequired) errorMessages.value.push('必須項目です')
 }
 
-watch(() => props.modelValue, newValue => { selectedValue.value = newValue }, { immediate: true })
+watch(() => props.modelValue, newValue => { selectedValue.value = newValue ?? '' }, { immediate: true })
 
 watch(() => selectedValue.value, newValue => {
   validateValue()
-  emit('update:modelValue', newValue)
+  if (props.modelValue !== undefined) emit('update:modelValue', newValue)
 }, { immediate: !!props.modelValue })
 </script>
 
@@ -76,13 +86,30 @@ watch(() => selectedValue.value, newValue => {
       >
         {{ placeholder || '選択してください' }}
       </option>
-      <option
+      <template
         v-for="option in options"
-        :key="option.value"
-        :value="option.value"
+        :key="isOption(option) ? option.value : Object.keys(option)[0]"
       >
-        {{ option.label }}
-      </option>
+        <option v-if="isOption(option)" :value="option.value">
+          {{ option.label }}
+        </option>
+        <template v-else>
+          <optgroup
+            v-for="(opt, key) in option"
+            :key="key"
+            :label="key"
+          >
+            <option
+              v-for="o in opt"
+              :key="o.value"
+              :value="o.value"
+            >
+              {{ o.label }}
+            </option>
+          </optgroup>
+          <hr>
+        </template>
+      </template>
     </select>
     <div :class="$style.arrow_container">
       <slot name="arrow" />
@@ -91,7 +118,7 @@ watch(() => selectedValue.value, newValue => {
         :class="$style.arrow"
       />
     </div>
-    <ErrorMessages />
+    <ErrorMessage />
   </InputBox>
 </template>
 

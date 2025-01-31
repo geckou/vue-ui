@@ -1,14 +1,14 @@
 {
-  "name": "@geckou/vue-ui-components",
+  "name": "@geckou/vue-ui",
   "version": "0.0.57",
-  "description": "A set of reusable Vue UI components by Geckou",
+  "description": "A set of reusable Vue UI by Geckou",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geckou/vue-ui-components.git"
+    "url": "git+https://github.com/geckou/vue-ui.git"
   },
   "author": "geckou-shogo <shogo.nojima@geckou.net>",
   "license": "MIT",
@@ -27,6 +27,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/parser": "^8.22.0",
     "@vitejs/plugin-vue": "^5.0.5",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.27.0",

@@ -8,16 +8,15 @@ import {
   watch,
 } from 'vue'
 import InputBox from '@/components/InputBox.vue'
-import ErrorMessages from '@/components/ErrorMessages.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 type InputValue = string | number
-
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: InputValue): void }>()
 
 const props = withDefaults(defineProps<{
-  modelValue: InputValue
   name: string
-  cssStyle?: InputBoxStyleForEachStatus
+  modelValue?: InputValue
+  cssStyle?: InputBoxStyleForEachStatus | undefined
   type? : string
   placeholder?: string
   isDisabled? : boolean
@@ -26,7 +25,8 @@ const props = withDefaults(defineProps<{
   autocomplete?: string
   validates?: Validates
 }>(), {
-  cssStyle    : () => ({ default: {} }),
+  modelValue  : undefined,
+  cssStyle    : undefined,
   type        : 'text',
   placeholder : '入力してください',
   maxLength   : 30,
@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<{
   validates   : () => [],
 })
 
-const inputValue = ref<InputValue>(props.modelValue)
+const inputValue = ref<InputValue>(props.modelValue ?? '')
 const errorMessages = ref<Array<string>>([])
 
 const convertFullWidthToHalfWidth = (str:string): string => {
@@ -45,18 +45,18 @@ const convertFullWidthToHalfWidth = (str:string): string => {
 const validateValue = (value: InputValue) => {
   errorMessages.value = []
   if (!inputValue.value && props.isRequired) errorMessages.value.push('必須項目です')
-  if (!props.validates.length) return
-
-  props.validates.forEach(validate => {
-    if (!validate.regex.test(String(value))) errorMessages.value.push(validate.message)
-  })
+  else if (inputValue.value && props.validates.length) {
+    props.validates.forEach(validate => {
+      if (!validate.regex.test(String(value))) errorMessages.value.push(validate.message)
+    })
+  }
 }
 
-watch(() => props.modelValue, newValue => inputValue.value = newValue, { immediate: true })
+watch(() => props.modelValue, newValue => inputValue.value = newValue ?? '', { immediate: true })
 
 watch(() => inputValue.value, newValue => {
   validateValue(newValue)
-  emit('update:modelValue', Number.isInteger(newValue) ? Number(newValue) : convertFullWidthToHalfWidth(newValue.toString()))
+  if (props.modelValue !== undefined) emit('update:modelValue', Number.isInteger(newValue) ? Number(newValue) : convertFullWidthToHalfWidth(newValue.toString()))
 }, { immediate: !!props.modelValue })
 </script>
 
@@ -75,9 +75,14 @@ watch(() => inputValue.value, newValue => {
       :disabled="isDisabled"
       :autocomplete="autocomplete"
       :maxlength="maxLength"
+      :invalid="errorMessages.length"
+      :valid="!errorMessages.length"
     >
     <slot name="after" />
-    <ErrorMessages v-show="errorMessages.length" />
+    <ErrorMessage
+      :errorMessages="errorMessages"
+      :class="$style.error_message"
+    />
   </InputBox>
 </template>
 
@@ -88,5 +93,10 @@ watch(() => inputValue.value, newValue => {
   > input {
     flex: 1 1 auto;
   }
+}
+
+:is(.error_message) {
+  position         : absolute;
+  inset-block-start: 100%;
 }
 </style>

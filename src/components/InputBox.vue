@@ -7,6 +7,8 @@ import type {
 import {
   ref,
   computed,
+  onMounted,
+  onUnmounted,
 } from 'vue'
 
 const props = defineProps<{
@@ -15,35 +17,101 @@ const props = defineProps<{
   isDisabled?: boolean
 }>()
 
+const TEXT_COLOR = '#333'
+const PLACEHOLDER_COLOR = '#999'
+const BORDER_COLOR = '#ccc'
+const DISABLED_COLOR = '#f9f9f9'
+const CAUTION_COLOR = '#aa0000'
+const VALID_COLOR = '#28a745'
+const FOCUS_COLOR = '#007bff'
 const inputBox = ref<HTMLElement | null>(null)
 
-const isFocused = computed<boolean>(() => {
-  return inputBox.value ?
-    inputBox.value.matches(':has(*:focus), :has(*:valid)') :
-    false
+const cssStylesUsed = computed<InputBoxStyleForEachStatus>(() => {
+  const BORDER = {
+    color : BORDER_COLOR,
+    size  : '1px',
+    radius: '.25rem',
+  }
+
+  return props.cssStyle ? props.cssStyle : {
+    default: {
+      textColor       : TEXT_COLOR,
+      placeholderColor: PLACEHOLDER_COLOR,
+      backgroundColor : 'inherit',
+      border          : BORDER,
+      boxShadow       : '0 0 0 0 rgba(0, 0, 0, 0)',
+    },
+    disabled: {
+      textColor       : PLACEHOLDER_COLOR,
+      placeholderColor: PLACEHOLDER_COLOR,
+      backgroundColor : DISABLED_COLOR,
+      border          : BORDER,
+      boxShadow       : '0 0 0 0 rgba(0, 0, 0, 0)',
+    },
+    focus: {
+      textColor       : TEXT_COLOR,
+      placeholderColor: PLACEHOLDER_COLOR,
+      backgroundColor : 'inherit',
+      border          : {
+        ...BORDER,
+        color: FOCUS_COLOR,
+      },
+      boxShadow: `0 0 .1rem .1rem ${FOCUS_COLOR}55`,
+    },
+    error: {
+      textColor       : TEXT_COLOR,
+      placeholderColor: PLACEHOLDER_COLOR,
+      backgroundColor : `${CAUTION_COLOR}11`,
+      border          : {
+        ...BORDER,
+        color: CAUTION_COLOR,
+      },
+      boxShadow: `0 0 .1rem .1rem ${CAUTION_COLOR}55`,
+    },
+    valid: {
+      textColor       : TEXT_COLOR,
+      placeholderColor: PLACEHOLDER_COLOR,
+      backgroundColor : `${VALID_COLOR}11`,
+      border          : {
+        ...BORDER,
+        color: VALID_COLOR,
+      },
+      boxShadow: '0 0 0 0 rgba(0, 0, 0, 0)',
+    },
+  }
 })
 
-const isInvalid = computed<boolean>(() => {
-  return inputBox.value ?
-    inputBox.value.matches(':has(*:not(:placeholder-shown)), :has(*:autofill), :has(*:invalid)') :
-    false
+const currentStyle = computed<InputBoxStyle>(() => cssStylesUsed.value[currentState.value as StateVariation] ?? cssStylesUsed.value.default)
+const currentState = ref<StateVariation>('default')
+
+const checkElementState = (el: Element | null | undefined) => {
+  if (!el) currentState.value = 'default'
+  else if (el.matches(':disabled')) currentState.value = 'disabled'
+  else if (el.matches(':focus')) currentState.value = 'focus'
+  else if (el.matches(':valid') && el.matches(':not(:placeholder-shown)') && el.matches(':not(:invalid')) currentState.value = 'valid'
+  else if (el.matches(':invalid')) currentState.value = 'error'
+  else currentState.value = 'default'
+}
+
+const updateState = () => {
+  const el = inputBox.value?.querySelector('input, textarea, select')
+  checkElementState(el)
+}
+
+onMounted(() => {
+  if (!inputBox.value) return
+  const observer = new MutationObserver(updateState)
+  observer.observe(inputBox.value, { childList: true, subtree: true })
+  inputBox.value.addEventListener('focusin', updateState, true)
+  inputBox.value.addEventListener('focusout', updateState, true)
+  updateState()
 })
 
-const isValid = computed<boolean>(() => {
-  return inputBox.value ?
-    inputBox.value.matches(':has(*:valid)') :
-    false
+onUnmounted(() => {
+  if (!inputBox.value) return
+  inputBox.value.removeEventListener('focusin', updateState, true)
+  inputBox.value.removeEventListener('focusout', updateState, true)
 })
-
-const variant = computed<StateVariation>(() => {
-  if (props.isErrored || isInvalid.value) return 'error'
-  else if (props.isDisabled) return 'disabled'
-  else if (isValid.value) return 'valid'
-  else if (isFocused.value) return 'focus'
-  else return 'default'
-})
-
-const currentStyle = computed<InputBoxStyle | undefined>(() => props.cssStyle?.[variant.value as StateVariation])
 </script>
 
 <template>
@@ -51,13 +119,13 @@ const currentStyle = computed<InputBoxStyle | undefined>(() => props.cssStyle?.[
     ref="inputBox"
     :class="$style.input_box"
     :style="{
-      '--text-color': currentStyle?.textColor || '#333',
-      '--placeholder-color': currentStyle?.placeholderColor || '#999',
-      '--border-color': currentStyle?.border?.color || '#ccc',
-      '--background-color': currentStyle?.backgroundColor || 'inherit',
-      '--border-size': currentStyle?.border?.size || '1px',
-      '--radius-size': currentStyle?.border?.radius || '0.25rem',
-      '--box-shadow': currentStyle?.boxShadow || 'none',
+      '--text-color': currentStyle.textColor || TEXT_COLOR,
+      '--placeholder-color': currentStyle.placeholderColor || PLACEHOLDER_COLOR,
+      '--border-color': currentStyle.border?.color || BORDER_COLOR,
+      '--background-color': currentStyle.backgroundColor || 'inherit',
+      '--border-size': currentStyle.border?.size || '1px',
+      '--radius-size': currentStyle.border?.radius || '.25rem',
+      '--box-shadow': currentStyle.boxShadow || '0 0 0 0 rgba(0, 0, 0, 0)',
     }"
   >
     <slot />
@@ -69,7 +137,9 @@ const currentStyle = computed<InputBoxStyle | undefined>(() => props.cssStyle?.[
   display: inline-flex;
   max-inline-size: 100%;
   background-color: var(--background-color);
-  border: var(--border-size) solid var(--border-color);
+  box-shadow:
+    0 0 0 var(--border-size) var(--border-color) inset,
+    var(--box-shadow);
   border-radius: var(--radius-size);
   color: var(--text-color);
   position: relative;
@@ -78,7 +148,7 @@ const currentStyle = computed<InputBoxStyle | undefined>(() => props.cssStyle?.[
   > textarea,
   > select {
     inline-size: 100%;
-    padding: .5rem 1rem;
+    padding: .5rem;
     background-color: transparent;
     border: none;
     outline: none;

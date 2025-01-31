@@ -1,4 +1,4 @@
-export type StateVariation = 'default' | 'error' | 'disabled' | 'valid' | 'focus'
+export type StateVariation = 'default' | 'error' | 'disabled' | 'valid' | 'focus' | 'hover'
 
 export type BorderStyle = {
   color: string
@@ -6,65 +6,53 @@ export type BorderStyle = {
   radius: string
 }
 
-export type Option = {
-  label : string
-  value: SelectValue,
-  order?: number
+export type BaseStyle = {
+  textColor?: string
+  backgroundColor?: string
+  border?: BorderStyle
+  boxShadow?: string
 }
 
-type InputBoxStyle = {
-  textColor?: string
+export type StyleForEachStatus<T> = Partial<Record<StateVariation, T>> & {
+  default: T
+}
+
+// InputBoxStyle
+export type InputBoxStyle = BaseStyle & {
   placeholderColor?: string
-  border?: BorderStyle
-  backgroundColor?: string
-  boxShadow?: string
 }
 
-export type InputBoxStyleForEachStatus = {
-  default: InputBoxStyle
-  error?: InputBoxStyle
-  disabled?: InputBoxStyle
-  valid?: InputBoxStyle
-  focus?: InputBoxStyle
-}
+export type InputBoxStyleForEachStatus = StyleForEachStatus<InputBoxStyle>
 
-type ButtonStyle = {
-  textColor?: string
-  border?: BorderStyle
-  backgroundColor?: string
+// ButtonStyle
+export type ButtonStyle = BaseStyle & {
   backgroundImage?: string
-  boxShadow?: string
 }
 
-export type ButtonStyleForEachStatus = {
-  default: ButtonStyle
-  hover?: ButtonStyle
-  disabled?: ButtonStyle
-}
+export type ButtonStyleForEachStatus = StyleForEachStatus<ButtonStyle>
 
-export type CheckBoxStyle = {
-  border?: BorderStyle
-  backgroundColor?: string
-}
+// CheckBoxStyle
+export type CheckBoxStyle = Pick<BaseStyle, 'textColor' | 'border' | 'backgroundColor'>
+export type CheckBoxStyleForEachStatus = StyleForEachStatus<CheckBoxStyle>
 
-export type CheckBoxStyleForEachStatus = {
-  default: CheckBoxStyle
-  disabled?: CheckBoxStyle
-}
-
+// RadioButtonStyle
 export type RadioButtonStyle = {
   border?: Omit<BorderStyle, 'radius'>
   backgroundColor?: string
 }
 
-export type RadioButtonStyleForEachStatus = {
-  default: RadioButtonStyle
-  disabled?: RadioButtonStyle
+export type RadioButtonStyleForEachStatus = StyleForEachStatus<RadioButtonStyle>
+
+// Option
+export type Option = {
+  label: string
+  value: SelectValue
+  order?: number
 }
 
+// Validate
 type Validate = {
   regex: RegExp
   message: string
 }
-
-export type Validates = Array<Validate>
+export type Validates = Validate[]

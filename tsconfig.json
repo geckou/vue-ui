@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ESNext",                // 出力するJavaScriptのターゲット
-    "module": "ESNext",               // ESモジュール形式
-    "moduleResolution": "node",       // Node.js互換のモジュール解決
-    "declaration": true,              // 型定義ファイル（.d.ts）の生成
-    "outDir": "dist",                 // 出力先ディレクトリ
-    "strict": true,                   // 厳格モード
-    "esModuleInterop": true,          // ESモジュールとCommonJSの互換性
-    "skipLibCheck": true,             // ライブラリチェックをスキップ
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*"],            // コンパイル対象のファイル
