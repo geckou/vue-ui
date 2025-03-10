@@ -4,11 +4,13 @@ import type {
   CheckBoxStyleForEachStatus,
 } from '@/types'
 import {
+  computed,
   ref,
   watch,
 } from 'vue'
 import LabeledCheckbox from '@/components/LabeledCheckbox.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
+import { COLOR } from '@/const'
 
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: string[]): void }>()
 
@@ -20,71 +22,71 @@ const props = withDefaults(defineProps<{
   isRequired?: boolean
   cssStyle?: CheckBoxStyleForEachStatus
 }>(), {
-  cssStyle: () => ({ default: {} }),
+  modelValue: undefined,
+  cssStyle  : undefined,
 })
 
-const checkedValues = ref<string[]>(props.modelValue || [])
-const checkBoxes = ref<Array<{ value: string, label: string, checked: boolean }>>([])
+const checkBoxes = ref(props.options.map(option => ({
+  value  : option.value,
+  label  : option.label,
+  checked: props.modelValue?.includes(option.value) || false,
+})))
+
+const checkedValues = computed<string[]>(() => checkBoxes.value.filter(checkBox => checkBox.checked).map(checkBox => checkBox.value))
 const errorMessage = ref('')
+const validateInput = () => errorMessage.value = props.isRequired && checkedValues.value.length === 0 ? '必須項目です' : ''
 
-const validateInput = (values: string[]) => errorMessage.value = !values.length && props.isRequired ? '必須項目です' : ''
-
-const syncCheckBoxWithModelValue = () => {
-  if (!props.modelValue) return
-  
-  checkBoxes.value = props.options.map(option => {
-    const checked = props.modelValue?.includes(option.value) || false
-    return { ...option, checked }
-  })
-}
-
-watch(() => checkBoxes.value, newValue => {
-  const values = newValue.map(checkBox => checkBox.checked ? checkBox.value : '').filter(Boolean)
-  checkedValues.value = values
-}, {
-  deep: true,
-})
-
-watch(() => checkedValues.value, (newValue, oldValue) => {
-  const arraysEqual = (a: Array<string>, b: Array<string>): boolean => {
-    if (a.length !== b.length) return false
-    for (let i = 0; i < a.length; i++) if (JSON.stringify(a[i]) !== JSON.stringify(b[i])) return false
-    return true
-  }
-
-  if (oldValue && arraysEqual(newValue, oldValue)) return
-  validateInput(newValue)
+watch(checkedValues, (newValue, oldValue) => {
+  const isArraysEqual = (a: string[], b: string[]): boolean => a.length === b.length && a.every((val, index) => val === b[index])
+  if (oldValue && isArraysEqual(newValue, oldValue)) return
+  validateInput()
   emit('update:modelValue', newValue)
 }, {
   deep     : true,
   immediate: !!props.modelValue?.length,
 })
 
-watch(() => [props.options, props.modelValue], _ => {
-  syncCheckBoxWithModelValue()
+watch(() => props.modelValue, newValue => {
+  if (!newValue) return
+  checkBoxes.value.forEach(checkBox => checkBox.checked = newValue.includes(checkBox.value))
 }, {
   deep     : true,
   immediate: true,
 })
+
+const errorColor = {
+  ...(props.cssStyle?.error ?? {}),
+  textColor      : COLOR.white,
+  backgroundColor: COLOR.red,
+  border         : {
+    color : COLOR.red,
+    size  : '1px',
+    radius: '.25rem',
+  },
+}
 </script>
 
 <template>
   <div :class="$style.check_boxes">
     <template
-      v-for="(option, index) in options"
-      :key="option.label"
+      v-for="(checkBox, index) in checkBoxes"
+      :key="checkBox.label"
     >
-      <label>
-        <LabeledCheckbox
-          v-model="checkBoxes[index].checked"
-          :name="option.label"
-          :label="option.label"
-          :isDisabled="props.isDisabled"
-          :cssStyle="props.cssStyle"
-        />
-      </label>
+      <LabeledCheckbox
+        v-model="checkBoxes[index].checked"
+        :name="checkBox.label"
+        :label="checkBox.label"
+        :isDisabled="props.isDisabled"
+        :cssStyle="props.cssStyle"
+      />
     </template>
-    <ErrorMessage :errorMessage="errorMessage" />
+    <ErrorMessage
+      :errorMessages="errorMessage ? [errorMessage] : []"
+      :cssStyle="{
+        textColor: errorColor.textColor,
+        backgroundColor: errorColor.backgroundColor,
+      }"
+    />
   </div>
 </template>
 

@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import type { CheckBoxStyleForEachStatus } from '@/types'
-import {
-  ref,
-  computed,
-  watch,
-} from 'vue'
+import { computed } from 'vue'
 import CheckBox from '@/components/CheckBox.vue'
+import { COLOR } from '@/const'
 
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: boolean): void }>()
 
@@ -17,52 +14,69 @@ const props = withDefaults(defineProps<{
   cssStyle?: CheckBoxStyleForEachStatus
   isDisableAnimation?: boolean
 }>(), {
-  cssStyle: () => ({ default: {} }),
+  cssStyle: undefined,
 })
 
-const isChecked = ref(props.modelValue ?? false)
+const isChecked = computed<boolean>({
+  get: () => props.modelValue ?? false,
+  set: (newValue: boolean) => emit('update:modelValue', newValue),
+})
 
 const currentCssStyle = computed(() => {
-  if (props.isDisabled) return props.cssStyle.disabled
-  else if (isChecked.value) return props.cssStyle.valid
-  else return props.cssStyle.default
-})
+  const cssStyle = props.isDisabled ? props.cssStyle?.disabled : props.cssStyle?.default
 
-watch(() => isChecked.value, newValue => emit('update:modelValue', newValue))
-watch(() => props.modelValue, newValue => isChecked.value = newValue, { immediate: true })
+  return {
+    ...{
+      textColor      : props.isDisabled ? COLOR.darkGray : COLOR.black,
+      backgroundColor: props.isDisabled ? COLOR.darkGray : COLOR.blue,
+    },
+    ...(cssStyle ?? {}),
+  }
+})
 </script>
 
 <template>
-  <label
-    :class="$style.labeled_check_box"
-    :style="{ '--text-color': currentCssStyle?.textColor || 'black' }"
-  >
+  <label :class="$style.labeled_check_box">
     <CheckBox
       v-model="isChecked"
       :name="name"
       :isDisabled="isDisabled"
       :cssStyle="cssStyle"
       :isDisableAnimation="isDisableAnimation"
+      style="pointer-events: none;"
     />
-    <span :class="$style.label">
+    <span
+      :class="$style.label"
+      :style="{
+        '--text-color': currentCssStyle?.textColor,
+        '--checked-color': currentCssStyle?.backgroundColor,
+      }"
+    >
       {{ label }}
     </span>
   </label>
 </template>
 
 <style lang="scss" module>
-.labeled_check_box {
+:is(.labeled_check_box) {
   display    : inline-flex;
   align-items: center;
   gap        : .5em;
   cursor     : pointer;
 
-  .label {
-    color: var(--text-color);
-  }
-
   &:has(input:disabled) {
     cursor: auto;
   }
+
+  .label {
+    color: var(--checked-color);
+  }
+
+  &:has(input:checked) {
+    .label {
+      color: var(--text-color);
+    }
+  }
 }
+
 </style>

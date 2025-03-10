@@ -5,6 +5,7 @@ import type {
 } from '@/types'
 import {
   ref,
+  computed,
   watch,
 } from 'vue'
 import InputBox from '@/components/InputBox.vue'
@@ -19,25 +20,29 @@ const props = withDefaults(defineProps<{
   options : Array<Option | Record<string, Option[]>>
   name: string
   modelValue?: SelectValue
-  cssStyle?: InputBoxStyleForEachStatus
+  cssStyle?: InputBoxStyleForEachStatus | undefined
   placeholder?: string
   canOmitSelect?: boolean
   isDisabled? : boolean
   isRequired?: boolean
 }>(), {
   modelValue : undefined,
-  cssStyle   : () => ({ default: {} }),
+  cssStyle   : undefined,
   placeholder: '選択してください',
 })
 
 const errorMessages = ref<Array<string>>([])
-const selectedValue = ref<SelectValue>(props.modelValue ?? '')
 
-const isOption = (obj: any): obj is Option => {
+const selectedValue = computed<SelectValue>({
+  get: () => props.modelValue ?? '',
+  set: (newValue: SelectValue) => emit('update:modelValue', newValue),
+})
+
+const isOption = (obj: unknown): obj is Option => {
   return (
     typeof obj === 'object' &&
     obj !== null &&
-    typeof obj.label === 'string' &&
+    'label' in obj && typeof obj.label === 'string' &&
     'value' in obj
   )
 }
@@ -47,22 +52,21 @@ const validateValue = () => {
   if (!selectedValue.value && props.isRequired) errorMessages.value.push('必須項目です')
 }
 
-watch(() => props.modelValue, newValue => { selectedValue.value = newValue ?? '' }, { immediate: true })
-
-watch(() => selectedValue.value, newValue => {
-  validateValue()
-  if (props.modelValue !== undefined) emit('update:modelValue', newValue)
-}, { immediate: !!props.modelValue })
+watch(() => selectedValue.value, () => validateValue(), { immediate: !!props.modelValue, flush: 'post' })
 </script>
 
 <template>
   <InputBox
     :cssStyle="cssStyle"
     :class="$style.select_box"
+    :isDisabled="isDisabled"
   >
     <select
       v-model="selectedValue"
+      :disabled="isDisabled"
+      :required="isRequired"
       :class="$style.select"
+      @blur="validateValue()"
     >
       <option
         v-if="canOmitSelect"
@@ -90,7 +94,11 @@ watch(() => selectedValue.value, newValue => {
         v-for="option in options"
         :key="isOption(option) ? option.value : Object.keys(option)[0]"
       >
-        <option v-if="isOption(option)" :value="option.value">
+        <option
+          v-if="isOption(option)"
+          :value="option.value"
+          :disabled="option.isDisabled"
+        >
           {{ option.label }}
         </option>
         <template v-else>
@@ -103,6 +111,7 @@ watch(() => selectedValue.value, newValue => {
               v-for="o in opt"
               :key="o.value"
               :value="o.value"
+              :disabled="o.isDisabled"
             >
               {{ o.label }}
             </option>
@@ -118,7 +127,13 @@ watch(() => selectedValue.value, newValue => {
         :class="$style.arrow"
       />
     </div>
-    <ErrorMessage />
+    <ErrorMessage
+      :errorMessages="errorMessages"
+      :cssStyle="{
+        textColor: cssStyle?.error?.backgroundColor,
+        backgroundColor: cssStyle?.error?.textColor,
+      }"
+    />
   </InputBox>
 </template>
 

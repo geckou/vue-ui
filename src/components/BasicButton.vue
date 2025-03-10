@@ -1,15 +1,36 @@
 <script setup lang="ts">
 import type { ButtonStyleForEachStatus } from '@/types'
+import { computed } from 'vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
+import { COLOR } from '@/const'
 
 const props = defineProps<{
   cssStyle?: ButtonStyleForEachStatus
   duration?: number
   isLoading?: boolean
+  isDisabled?: boolean
   buttonType?: 'button' | 'submit' | 'reset'
 }>()
 
-const defaultStyle = props.cssStyle?.default || {}
+const currentCssStyle = computed(() => {
+  const cssStyle = props.isDisabled ? props.cssStyle?.disabled : props.cssStyle?.default
+
+  return {
+    ...{
+      textColor      : COLOR.white,
+      backgroundColor: props.isDisabled ? COLOR.darkGray : COLOR.blue,
+      backgroundImage: 'none',
+      border         : {
+        color : props.isDisabled ? COLOR.darkGray : COLOR.blue,
+        size  : '1px',
+        radius: '.25rem',
+      },
+      boxShadow: '0 0 0 0 transparent',
+    },
+    ...cssStyle,
+  }
+})
+
 const hoverStyle = props.cssStyle?.hover || {}
 </script>
 
@@ -20,23 +41,24 @@ const hoverStyle = props.cssStyle?.hover || {}
       { [$style.loading] : isLoading },
     ]"
     :style="{
-      '--text-color': defaultStyle?.textColor || 'blue',
-      '--background-color': defaultStyle?.backgroundColor || 'inherit',
-      '--background-image': defaultStyle?.backgroundImage || 'none',
-      '--border-color': defaultStyle?.border?.color || 'blue',
-      '--border-size': defaultStyle?.border?.size || '2px',
-      '--radius-size': defaultStyle?.border?.radius || '0.25rem',
-      '--box-shadow': defaultStyle?.boxShadow || '0 0 0 0 transparent',
-      '--hover-text-color': hoverStyle?.textColor || defaultStyle?.textColor || 'var(--text-color)',
-      '--hover-background-color': hoverStyle?.backgroundColor || defaultStyle?.backgroundColor || 'var(--background-color)',
-      '--hover-background-image': hoverStyle?.backgroundImage || defaultStyle?.backgroundImage || 'var(--background-image)',
-      '--hover-border-color': hoverStyle?.border?.color || defaultStyle?.border?.color || 'var(--border-color)',
-      '--hover-border-size': hoverStyle?.border?.size || defaultStyle?.border?.size || 'var(--border-size)',
-      '--hover-radius-size': hoverStyle?.border?.radius || defaultStyle?.border?.radius || 'var(--radius-size)',
-      '--hover-box-shadow': hoverStyle?.boxShadow || defaultStyle?.boxShadow || 'var(--box-shadow)',
+      '--text-color': currentCssStyle?.textColor,
+      '--background-color': currentCssStyle?.backgroundColor,
+      '--background-image': currentCssStyle?.backgroundImage,
+      '--border-color': currentCssStyle?.border?.color,
+      '--border-size': currentCssStyle?.border?.size,
+      '--radius-size': currentCssStyle?.border?.radius,
+      '--box-shadow': currentCssStyle?.boxShadow,
+      '--hover-text-color': hoverStyle?.textColor || currentCssStyle?.textColor,
+      '--hover-background-color': hoverStyle?.backgroundColor || currentCssStyle?.backgroundColor && `${currentCssStyle?.backgroundColor}cc`,
+      '--hover-background-image': hoverStyle?.backgroundImage || currentCssStyle?.backgroundImage,
+      '--hover-border-color': hoverStyle?.border?.color || currentCssStyle?.border?.color,
+      '--hover-border-size': hoverStyle?.border?.size || currentCssStyle?.border?.size,
+      '--hover-radius-size': hoverStyle?.border?.radius || currentCssStyle?.border?.radius,
+      '--hover-box-shadow': hoverStyle?.boxShadow || currentCssStyle?.boxShadow,
       '--duration': `${duration || .3}s`,
     }"
     :type="buttonType || 'button'"
+    :disabled="isDisabled || isLoading"
   >
     <div
       v-show="isLoading"
@@ -60,7 +82,7 @@ const hoverStyle = props.cssStyle?.hover || {}
   justify-content : center;
   align-items     : center;
   inline-size     : max-content;
-  padding         : .5rem 1rem;
+  padding         : 1rem 2rem;
   background-color: var(--background-color);
   box-shadow      :
     0 0 0 var(--border-size) var(--border-color) inset,
@@ -84,7 +106,8 @@ const hoverStyle = props.cssStyle?.hover || {}
     }
   }
 
-  &.loading {
+  &.loading,
+  &:disabled {
     pointer-events: none !important;
 
     &::before {
@@ -94,7 +117,9 @@ const hoverStyle = props.cssStyle?.hover || {}
       pointer-events: all;
       cursor        : not-allowed !important;
     }
+  }
 
+  &.loading {
     > *:not(:is(.loading_animation)) {
       visibility: hidden;
     }
@@ -102,7 +127,7 @@ const hoverStyle = props.cssStyle?.hover || {}
 }
 
 :is(.loading_animation) {
-  max-block-size: calc(100% - 1rem);
+  max-block-size: calc(100% - 1.5rem);
   color         : currentColor;
   fill          : currentColor;
   position      : absolute;

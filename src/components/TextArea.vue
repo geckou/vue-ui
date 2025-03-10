@@ -5,7 +5,10 @@ import type {
 } from '@/types'
 import {
   ref,
+  computed,
   watch,
+  nextTick,
+  onMounted,
 } from 'vue'
 import InputBox from '@/components/InputBox.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
@@ -17,7 +20,7 @@ const emit = defineEmits<{ (e: 'update:modelValue', newValue: InputValue): void 
 const props = withDefaults(defineProps<{
   name: string
   modelValue?: InputValue
-  cssStyle?: InputBoxStyleForEachStatus
+  cssStyle?: InputBoxStyleForEachStatus | undefined
   placeholder?: string
   isDisabled? : boolean
   isRequired?: boolean
@@ -25,65 +28,91 @@ const props = withDefaults(defineProps<{
   maxLength?: number
   autocomplete?: string
   validates?: Validates
+  autoAdjustHeight?: boolean
 }>(), {
   modelValue  : undefined,
-  cssStyle    : () => ({ default: {} }),
+  cssStyle    : undefined,
   isRequired  : false,
   placeholder : '入力してください',
-  rows        : 3,
+  rows        : undefined,
   maxLength   : 100,
   isDisabled  : false,
   autocomplete: 'off',
   validates   : () => [],
 })
 
-const inputValue = ref<InputValue>(props.modelValue ?? '')
-const errorMessages = ref<Array<string>>([])
+const inputValue = computed<InputValue>({
+  get: () => props.modelValue ?? '',
+  set: (newValue: InputValue) => emit('update:modelValue', newValue),
+})
 
-const validateValue = (value: InputValue) => {
+const errorMessages = ref<string[]>([])
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
+
+const validateValue = () => {
   errorMessages.value = []
-  if (!props.validates.length) return
+  const value = inputValue.value
 
-  props.validates.forEach(validate => {
-    if (!validate.regex.test(String(value))) errorMessages.value.push(validate.message)
+  if (!value && props.isRequired) errorMessages.value.push('必須項目です')
+  else if (value && props.validates.length) {
+    props.validates.forEach(validate => {
+      if (!validate.regex.test(String(value))) errorMessages.value.push(validate.message)
+    })
+  }
+}
+
+const adjustTextareaHeight = () => {
+  if (!props.autoAdjustHeight) return
+
+  nextTick(() => {
+    if (textareaRef.value) {
+      textareaRef.value.style.height = 'auto'
+      textareaRef.value.style.height = `calc(${textareaRef.value.scrollHeight}px - 2rem)`
+    }
   })
 }
 
-watch(() => props.modelValue, newValue => inputValue.value = newValue ?? '', { immediate: true })
+onMounted(adjustTextareaHeight)
 
-watch(() => inputValue.value, newValue => {
-  if (newValue === null) {
-    errorMessages.value = []
-    emit('update:modelValue', null)
-    return
-  }
-
-  validateValue(newValue)
-  if (props.modelValue !== undefined) emit('update:modelValue', newValue)
-}, { immediate: !!props.modelValue })
+watch(inputValue, () => {
+  validateValue()
+  adjustTextareaHeight()
+},
+{ immediate: !!props.modelValue, flush: 'post' })
 </script>
 
 <template>
   <InputBox
     :cssStyle="cssStyle"
     :class="$style.text_area"
+    :isErrored="!!errorMessages.length"
+    :isDisabled="isDisabled"
   >
     <textarea
+      ref="textareaRef"
       v-model="inputValue"
-      :required="isRequired"
       :name="name"
+      :required="isRequired"
       :placeholder="placeholder"
       :disabled="isDisabled"
       :autocomplete="autocomplete"
       :rows="rows"
       :maxlength="maxLength"
+      :aria-invalid="!!errorMessages.length ? 'true' : undefined"
+      @blur="validateValue()"
     />
-    <ErrorMessage v-show="errorMessages.length" />
+    <ErrorMessage
+      :errorMessages="errorMessages"
+      :cssStyle="{
+        textColor: cssStyle?.error?.backgroundColor,
+        backgroundColor: cssStyle?.error?.textColor,
+      }"
+    />
   </InputBox>
 </template>
 
 <style module>
-.text_area {
+:is(.text_area) {
   min-block-size: 4em;
 }
 </style>

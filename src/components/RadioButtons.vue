@@ -8,6 +8,7 @@ import {
   watch,
   computed,
 } from 'vue'
+import { COLOR } from '@/const'
 
 type SelectValue = string | number
 
@@ -21,28 +22,38 @@ const props = withDefaults(defineProps<{
   cssStyle?: RadioButtonStyleForEachStatus
   isDisableAnimation?: boolean
 }>(), {
-  cssStyle: () => ({ default: {} }),
+  cssStyle: undefined,
 })
 
 const errorMessages = ref<Array<string>>([])
-const selectedValue = ref<SelectValue>(props.modelValue ?? '')
+
+const selectedValue = computed({
+  get: () => props.modelValue ?? '',
+  set: (newValue: SelectValue) => emit('update:modelValue', newValue),
+})
+
+const currentCssStyle = computed(() => {
+  const cssStyle = props.isDisabled ? props.cssStyle?.disabled : props.cssStyle?.default
+
+  return {
+    ...{
+      textColor      : props.isDisabled ? COLOR.darkGray : COLOR.black,
+      backgroundColor: props.isDisabled ? COLOR.lightGray : COLOR.white,
+      border         : {
+        color: props.isDisabled ? COLOR.darkGray : COLOR.blue,
+        size : '1px',
+      },
+    },
+    ...(cssStyle ?? {}),
+  }
+})
 
 const validateValue = () => {
   errorMessages.value = []
   if (!selectedValue.value && props.isRequired) errorMessages.value.push('必須項目です')
 }
 
-const currentCssStyle = computed(() => {
-  if (props.isDisabled) return props.cssStyle.disabled
-  else return props.cssStyle.default
-})
-
-watch(() => props.modelValue, newValue => { selectedValue.value = newValue }, { immediate: true })
-
-watch(() => selectedValue.value, newValue => {
-  validateValue()
-  emit('update:modelValue', newValue)
-}, { immediate: !!props.modelValue })
+watch(() => selectedValue.value, () => validateValue(), { immediate: !!props.modelValue })
 </script>
 
 <template>
@@ -52,9 +63,9 @@ watch(() => selectedValue.value, newValue => {
       :key="option.value"
       :class="$style.radio"
       :style="{
-        '--border-color': currentCssStyle?.border?.color || 'blue',
-        '--border-size' : currentCssStyle?.border?.size || '1px',
-        '--background-color': currentCssStyle?.backgroundColor || '#fff',
+        '--border-color': currentCssStyle?.border?.color,
+        '--border-size' : currentCssStyle?.border?.size,
+        '--background-color': currentCssStyle?.backgroundColor,
         '--duration': isDisableAnimation ? '0s' : '.3s',
       }"
     >
@@ -67,7 +78,7 @@ watch(() => selectedValue.value, newValue => {
         :required="isRequired"
         :checked="option.value === selectedValue"
       >
-      <span :class="$style.label">
+      <span>
         {{ option.label }}
       </span>
     </label>
@@ -120,7 +131,7 @@ watch(() => selectedValue.value, newValue => {
   }
   
   &:has(input:checked) {
-    color: inherit;
+    color: var(--text-color);
 
     &::before {
       box-shadow      : 0 0 0 2px var(--background-color) inset, 0 0 0 1px var(--border-color);
@@ -130,15 +141,7 @@ watch(() => selectedValue.value, newValue => {
   }
 
   &:has(input:disabled) {
-    pointer-events: none !important;
-
-    &::before {
-      content       : '';
-      position      : absolute;
-      inset         : 0;
-      pointer-events: all;
-      cursor        : not-allowed !important;
-    }
+    cursor: not-allowed !important;
   }
 
   > input {

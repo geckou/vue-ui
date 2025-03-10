@@ -5,19 +5,21 @@ import type {
 } from '@/types'
 import {
   ref,
+  computed,
   watch,
 } from 'vue'
 import InputBox from '@/components/InputBox.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 
 type InputValue = string | number
+
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: InputValue): void }>()
 
 const props = withDefaults(defineProps<{
   name: string
   modelValue?: InputValue
   cssStyle?: InputBoxStyleForEachStatus | undefined
-  type? : string
+  inputType? : string
   placeholder?: string
   isDisabled? : boolean
   isRequired?: boolean
@@ -27,61 +29,73 @@ const props = withDefaults(defineProps<{
 }>(), {
   modelValue  : undefined,
   cssStyle    : undefined,
-  type        : 'text',
+  inputType   : 'text',
   placeholder : '入力してください',
   maxLength   : 30,
   autocomplete: 'off',
   validates   : () => [],
 })
 
-const inputValue = ref<InputValue>(props.modelValue ?? '')
-const errorMessages = ref<Array<string>>([])
+const errorMessages = ref<string[]>([])
 
-const convertFullWidthToHalfWidth = (str:string): string => {
+const inputValue = computed<InputValue>({
+  get: () => props.modelValue ?? '',
+  set: (newValue: InputValue) => {
+    const convertedValue = typeof newValue === 'number'
+      ? newValue
+      : convertFullWidthToHalfWidth(String(newValue))
+
+    emit('update:modelValue', convertedValue)
+  },
+})
+
+const convertFullWidthToHalfWidth = (str: string): string => {
   const fullWidthRegEx = /[Ａ-Ｚａ-ｚ０-９]/g
   return str.replace(fullWidthRegEx, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
 }
 
-const validateValue = (value: InputValue) => {
+const validateValue = () => {
   errorMessages.value = []
-  if (!inputValue.value && props.isRequired) errorMessages.value.push('必須項目です')
-  else if (inputValue.value && props.validates.length) {
+  const value = inputValue.value
+  
+  if (!value && props.isRequired) errorMessages.value.push('必須項目です')
+  else if (value && props.validates.length) {
     props.validates.forEach(validate => {
       if (!validate.regex.test(String(value))) errorMessages.value.push(validate.message)
     })
   }
 }
 
-watch(() => props.modelValue, newValue => inputValue.value = newValue ?? '', { immediate: true })
-
-watch(() => inputValue.value, newValue => {
-  validateValue(newValue)
-  if (props.modelValue !== undefined) emit('update:modelValue', Number.isInteger(newValue) ? Number(newValue) : convertFullWidthToHalfWidth(newValue.toString()))
-}, { immediate: !!props.modelValue })
+watch(inputValue, () => validateValue(), { immediate: !!props.modelValue, flush: 'post' })
 </script>
 
 <template>
   <InputBox
     :cssStyle="cssStyle"
-    class="text_box"
+    :class="$style.text_box"
+    :isErrored="!!errorMessages.length"
+    :isDisabled="isDisabled"
   >
     <slot name="before" />
     <input
       v-model="inputValue"
-      :type="type"
-      :required="isRequired"
+      :type="inputType"
       :name="name"
+      :required="isRequired"
       :placeholder="placeholder"
       :disabled="isDisabled"
       :autocomplete="autocomplete"
       :maxlength="maxLength"
-      :invalid="errorMessages.length"
-      :valid="!errorMessages.length"
+      :aria-invalid="!!errorMessages.length ? 'true' : undefined"
+      @blur="validateValue()"
     >
     <slot name="after" />
     <ErrorMessage
       :errorMessages="errorMessages"
-      :class="$style.error_message"
+      :cssStyle="{
+        textColor: cssStyle?.error?.backgroundColor,
+        backgroundColor: cssStyle?.error?.textColor,
+      }"
     />
   </InputBox>
 </template>
@@ -93,10 +107,5 @@ watch(() => inputValue.value, newValue => {
   > input {
     flex: 1 1 auto;
   }
-}
-
-:is(.error_message) {
-  position         : absolute;
-  inset-block-start: 100%;
 }
 </style>

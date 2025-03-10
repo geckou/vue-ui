@@ -48,6 +48,7 @@ export type Option = {
   label: string
   value: SelectValue
   order?: number
+  isDisabled?: boolean
 }
 
 // Validate
@@ -55,4 +56,5 @@ type Validate = {
   regex: RegExp
   message: string
 }
+
 export type Validates = Validate[]

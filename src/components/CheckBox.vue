@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import type { CheckBoxStyleForEachStatus } from '@/types'
-import {
-  ref,
-  computed,
-  watch,
-} from 'vue'
+import { computed } from 'vue'
 import CheckIcon from '@/components/Icon/CheckIcon.vue'
+import { COLOR } from '@/const'
 
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: boolean): void }>()
 
@@ -16,31 +13,45 @@ const props = withDefaults(defineProps<{
   cssStyle?: CheckBoxStyleForEachStatus
   isDisableAnimation?: boolean
 }>(), {
-  cssStyle: () => ({ default: {} }),
+  cssStyle: undefined,
 })
 
-const isChecked = ref(props.modelValue ?? false)
+const isChecked = computed<boolean>({
+  get: () => props.modelValue ?? false,
+  set: (newValue: boolean) => emit('update:modelValue', newValue),
+})
 
 const currentCssStyle = computed(() => {
-  if (props.isDisabled) return props.cssStyle.disabled
-  else return props.cssStyle.default
-})
+  const cssStyle = props.isDisabled ? props.cssStyle?.disabled : props.cssStyle?.default
 
-watch(() => isChecked.value, newValue => emit('update:modelValue', newValue))
-watch(() => props.modelValue, newValue => isChecked.value = newValue, { immediate: true })
+  return {
+    ...{
+      textColor      : props.isDisabled ? COLOR.darkGray : COLOR.blue,
+      backgroundColor: props.isDisabled ? COLOR.lightGray : COLOR.white,
+      border         : {
+        color : props.isDisabled ? COLOR.darkGray : COLOR.blue,
+        size  : '1px',
+        radius: '.25rem',
+      },
+    },
+    ...cssStyle,
+  }
+})
 </script>
 
 <template>
-  <span
+  <button
     :class="$style.check_box"
     :style="{
-      '--border-color': currentCssStyle?.border?.color || 'blue',
-      '--border-size' : currentCssStyle?.border?.size || '1px',
-      '--radius-size': currentCssStyle?.border?.radius || '0.25rem',
-      '--background-color': currentCssStyle?.backgroundColor || '#fff',
+      '--text-color': currentCssStyle?.textColor,
+      '--border-color': currentCssStyle?.border?.color,
+      '--border-size' : currentCssStyle?.border?.size,
+      '--radius-size': currentCssStyle?.border?.radius,
+      '--background-color': currentCssStyle?.backgroundColor,
       '--duration': isDisableAnimation ? '0s' : '.3s',
     }"
-    @click="isChecked = !isChecked"
+    type="button"
+    @click.stop="!isDisabled ? isChecked = !isChecked : null"
   >
     <input 
       v-model="isChecked"
@@ -52,7 +63,7 @@ watch(() => props.modelValue, newValue => isChecked.value = newValue, { immediat
       <slot name="check" />
       <CheckIcon v-if="!$slots.check" />
     </div>
-  </span>
+  </button>
 </template>
 
 <style lang="scss" module>
@@ -75,29 +86,31 @@ watch(() => props.modelValue, newValue => isChecked.value = newValue, { immediat
 }
 
 :is(.check_box) {
-  display         : flex;
-  align-items     : center;
-  justify-content : center;
-  width           : 1.5rem;
-  height          : 1.5rem;
-  box-shadow      : 0 0 0 var(--border-size) var(--border-color) inset;
-  border-radius   : var(--radius-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: none;
+  box-shadow: 0 0 0 var(--border-size) var(--border-color) inset;
+  border-radius: var(--radius-size);
   background-color: var(--background-color);
-  cursor          : pointer;
+  cursor: pointer;
 
   > input {
-    display : none;
+    display: none;
   }
 
   &:has(input:disabled) {
     pointer-events: none !important;
+    position: relative;
 
     &::before {
-      content       : '';
-      position      : absolute;
-      inset         : 0;
+      content: '';
+      position: absolute;
+      inset: 0;
       pointer-events: all;
-      cursor        : not-allowed !important;
+      cursor: not-allowed !important;
     }
   }
 
@@ -112,16 +125,16 @@ watch(() => props.modelValue, newValue => isChecked.value = newValue, { immediat
 }
 
 :is(.check_container) {
-  display        : flex;
-  align-items    : center;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  width          : 1rem;
-  height         : 1rem;
-  color          : var(--border-color);
+  width: 1rem;
+  height: 1rem;
+  color: var(--border-color);
 
   > * {
     color: currentColor;
-    fill : currentColor;
+    fill: currentColor;
   }
 }
 </style>
