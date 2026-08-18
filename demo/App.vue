@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import GeckouLogo from '~demo/components/GeckouLogo.vue'
+import StarField from '~demo/components/StarField.vue'
 import GettingStarted from '~demo/sections/GettingStarted.vue'
 import FormComponents from '~demo/sections/FormComponents.vue'
 import ArticleLists from '~demo/sections/ArticleLists.vue'
@@ -102,6 +103,8 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
 
 <template>
   <div :class="$style.layout">
+    <StarField />
+
     <header :class="$style.header">
       <button
         type="button"
@@ -182,6 +185,12 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   min-height    : 100vh;
   display       : flex;
   flex-direction: column;
+}
+
+.header,
+.body {
+  position: relative;
+  z-index : 1;
 }
 
 .header {
