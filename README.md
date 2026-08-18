@@ -128,6 +128,68 @@ const articles = ref<any[]>([])
 | `settings` | `ListSettings` | ✅ | 記事リンクの組み立て設定と表示オプション |
 | `columnNumber` | `number` | `GridList` のみ ✅ | グリッドのカラム数 |
 
+## Design tokens
+
+各コンポーネントは配色・余白・タイポグラフィを CSS カスタムプロパティで受け取ります。
+アプリ側のグローバル CSS で定義してください（未定義でも動作しますが、色や余白が効きません）。
+
+以下は [geckou.net](https://geckou.net/) のブランドカラーに合わせた例で、デモサイトも同じトークンで組んでいます。
+
+```css
+:root {
+  /* 配色 */
+  --primary-color: #1c4ac9;  /* 見出し・リンク・フォーカス */
+  --main-color   : #1c4ac9;  /* カテゴリラベルなどの塗り */
+  --link-color   : #1c4ac9;
+  --checked-color: #1c4ac9;  /* チェックボックス・ラジオの選択色 */
+  --text-color   : #15143a;
+  --gray         : #656a7d;  /* 補助テキスト */
+  --white        : #fff;     /* 画像上の文字色などに使用 */
+  --black-rgb    : 0, 8, 26; /* 影の生成に使用 */
+  --border-color : rgba(21, 20, 58, .12);
+  --light-border-color: rgba(21, 20, 58, .08);
+  --disable-text-color: #656a7d;
+
+  /* 余白（--bv を基準値にした 5 段階） */
+  --bv       : clamp(.375rem, .144rem + .46vw, .5rem);
+  --sp       : var(--bv);
+  --sp-min   : calc(var(--sp) / 2);
+  --sp-small : var(--sp);
+  --sp-medium: calc(var(--sp) * 2);
+  --sp-large : calc(var(--sp) * 4);
+  --sp-larger: calc(var(--sp) * 8);
+
+  /* タイポグラフィ */
+  --fs-small: clamp(.75rem, .519rem + .46vw, .875rem);
+  --fs-large: clamp(1rem, .769rem + .46vw, 1.125rem);
+
+  /* アイコン・角丸・アニメーション */
+  --icon-small        : calc(var(--bv) * 2);
+  --icon-medium       : calc(var(--bv) * 3);
+  --radius-size       : 4px;
+  --radius-small      : 4px;
+  --animation-duration: .3s;
+}
+```
+
+| 変数 | 用途 |
+|------|------|
+| `--primary-color` / `--main-color` / `--link-color` | ブランドカラー。見出し、リンク、カテゴリラベルの塗り |
+| `--text-color` / `--gray` / `--disable-text-color` | 本文・補助テキスト・非活性テキスト |
+| `--white` / `--black-rgb` | 画像上の文字色、影の生成 |
+| `--border-color` / `--light-border-color` | 枠線 |
+| `--bv` と `--sp-*` | 余白の基準値と段階 |
+| `--fs-small` / `--fs-large` | 小さめ・大きめの文字サイズ |
+
+記事一覧コンポーネントはコンテナクエリでレイアウトを切り替えるため、
+親要素に `container-type: inline-size` を指定してください。
+
+フォーム系コンポーネントは、個別に `cssStyle` prop（`InputBoxStyleForEachStatus` など）を渡すと
+状態ごとの配色を上書きできます。詳細は下の Types を参照してください。
+
+デモサイトは geckou.net のトンマナ（ダークネイビー `#15143a` 系、ブルー `#1c4ac9`、Zen Kaku Gothic Antique、
+`--bv` 起点のクランプスケール）に揃えており、OS の配色設定に応じてライト / ダークが切り替わります。
+
 ## Development
 
 ```bash

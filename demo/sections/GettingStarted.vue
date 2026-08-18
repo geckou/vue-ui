@@ -23,19 +23,27 @@ import { TextBox, StandardList } from '@geckou/vue-ui'
 <\/script>`
 
 const CSS_VARS = `:root {
-  --primary-color: #1f7a6c;
-  --main-color   : #1f7a6c;
-  --text-color   : #222;
-  --gray         : #8a8f98;
-  --white        : #fff;
-  --border-color : #e5e5e5;
+  /* 配色（値は geckou.net のブランドカラー） */
+  --primary-color: #1c4ac9;  /* 見出し・リンク・フォーカス */
+  --main-color   : #1c4ac9;  /* カテゴリラベルなどの塗り */
+  --text-color   : #15143a;
+  --gray         : #656a7d;  /* 補助テキスト */
+  --white        : #fff;     /* 画像上の文字色などに使用 */
+  --black-rgb    : 0, 8, 26; /* 影の生成に使用 */
+  --border-color : rgba(21, 20, 58, .12);
 
-  --bv           : 8px;            /* 基準値 */
-  --sp-min       : calc(var(--bv) / 2);
-  --sp-small     : var(--bv);
-  --sp-medium    : calc(var(--bv) * 2);
-  --sp-large     : calc(var(--bv) * 4);
-  --sp-larger    : calc(var(--bv) * 8);
+  /* 余白（--bv を基準値にした 5 段階） */
+  --bv           : clamp(.375rem, .144rem + .46vw, .5rem);
+  --sp           : var(--bv);
+  --sp-min       : calc(var(--sp) / 2);
+  --sp-small     : var(--sp);
+  --sp-medium    : calc(var(--sp) * 2);
+  --sp-large     : calc(var(--sp) * 4);
+  --sp-larger    : calc(var(--sp) * 8);
+
+  /* タイポグラフィ */
+  --fs-small     : clamp(.75rem, .519rem + .46vw, .875rem);
+  --fs-large     : clamp(1rem, .769rem + .46vw, 1.125rem);
 }`
 </script>
 
@@ -77,7 +85,9 @@ const CSS_VARS = `:root {
       <h3 :class="$style.heading">スタイルの前提</h3>
       <p :class="$style.text">
         各コンポーネントは CSS カスタムプロパティで配色と余白を受け取ります。
-        アプリ側のグローバル CSS で以下の変数を定義しておくと、そのままプロダクトのトーンに馴染みます。
+        アプリ側のグローバル CSS で以下の変数を定義すれば、そのままプロダクトのトーンに馴染みます。
+        下の値は geckou.net のブランドカラーに合わせたもので、このデモサイト自体も同じトークンで組んでいます
+        （OS の配色設定に応じてライト / ダークが切り替わります）。
       </p>
       <CodeBlock :code="CSS_VARS" language="css" />
     </section>
