@@ -43,10 +43,46 @@ import { TextBox, StandardList } from '@geckou/vue-ui'
 
 `TextBox` / `TextArea` / `SelectBox` / `CheckBox` / `CheckBoxes` / `CheckButton` /
 `LabeledCheckbox` / `LabeledFieldset` / `RadioButtons` / `ToggleButton` / `BasicButton` /
-`InputBox` / `InputGroup` / `TabUI` / `SlideDownUi` / `DropdownUi` / `ModalBox` /
-`PopupBox` / `LoadingSpinner` / `ErrorMessage`
+`TextButton` / `InputBox` / `InputGroup` / `TabUI` / `SlideDownUi` / `DropdownUi` /
+`ModalBox` / `PopupBox` / `LoadingSpinner` / `ErrorMessage`
 
-> `DatePicker` / `DateRangePicker` / `DateSelector` は Nuxt アプリ側の `FormValidationManager` に依存しているため、`src` には残していますが公開エクスポートには含めていません。
+### Date
+
+`DatePicker` / `DateRangePicker` / `DateSelector`
+
+`FormValidationManager` を渡すと、フォーム内の各入力の検証結果をまとめて追跡できます。
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DatePicker, DateRangePicker, FormValidationManager } from '@geckou/vue-ui'
+
+const manager = new FormValidationManager()
+const startedOn = ref('')
+const period = ref({ start: '', end: '' })
+// manager.isAllValid.value / manager.invalidNames.value で状態を参照する
+</script>
+
+<template>
+  <DatePicker
+    v-model="startedOn"
+    name="startedOn"
+    :formValidationManager="manager"
+    isRequired
+  />
+  <DateRangePicker
+    v-model="period"
+    name="period"
+  />
+  <button :disabled="!manager.isAllValid.value">送信</button>
+</template>
+```
+
+| Component | modelValue | 主な props |
+|-----------|-----------|-----------|
+| `DatePicker` | `string`（`YYYY-MM-DD` / `type="month"` なら `YYYY-MM`） | `name` / `isRequired` / `isDisabled` / `minDate` / `maxDate` / `size` / `type` / `formValidationManager` |
+| `DateRangePicker` | `{ start: string; end: string }` | `DatePicker` と同じ（開始日と終了日の min / max が自動連動） |
+| `DateSelector` | `string`（`YYYY-MM-DD`） | `name` / `isRequired` / `type` / `formValidationManager` |
 
 ### Article List
 

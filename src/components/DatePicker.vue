@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import { ref, reactive, watch } from 'vue'
-import { FormValidationManager } from '~/scripts/form-validation-manager'
+import { FormValidationManager } from '@/scripts/form-validation-manager'
+import InputBox from '@/components/InputBox.vue'
+import CalendarIcon from '@/components/Icon/CalendarIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: string | null): void }>()
@@ -93,25 +95,43 @@ watch(() => dateObject, newValue => {
   if (isValid) dateValue.value = value
 }, { deep: true })
 
-if (props.modelValue) {
-  dateValue.value = new Date(props.modelValue).toISOString().slice(0, 10)
-  setDateObject(dateValue.value)
+const applyModelValue = (value: string): void => {
+  if (!value) {
+    dateValue.value = ''
+    return
+  }
+
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return
+
+  const formatted = props.type === 'month'
+    ? parsed.toISOString().slice(0, 7)
+    : parsed.toISOString().slice(0, 10)
+
+  if (formatted === dateValue.value) return
+
+  dateValue.value = formatted
+  setDateObject(formatted)
 }
+
+watch(() => props.modelValue, newValue => applyModelValue(newValue))
+
+applyModelValue(props.modelValue)
+setValid(validateInput(dateValue.value).isValid)
 </script>
 
 <template>
-  <InputContainer
+  <InputBox
     :isDisabled="isDisabled"
     :class="[
       $style.date_picker,
       $style[size],
       { [$style.is_disabled]: isDisabled },
     ]"
-    :size="size"
-    :isError="!!errorMessage"
+    :isErrored="!!errorMessage"
   >
     <div :class="$style.date_input">
-      <IconCalendar :class="$style.icon" />
+      <CalendarIcon :class="$style.icon" />
       <input
         ref="datePicker"
         v-model="dateValue"
@@ -119,7 +139,8 @@ if (props.modelValue) {
         :name="name"
         :max="maxDate"
         :min="minDate"
-        :isRequired="isRequired"
+        :required="isRequired"
+        :disabled="isDisabled"
       >
     </div>
     <input
@@ -127,6 +148,7 @@ if (props.modelValue) {
       placeholder="年"
       maxlength="4"
       type="text"
+      :disabled="isDisabled"
       :class="$style.year"
     >/
     <input
@@ -134,6 +156,7 @@ if (props.modelValue) {
       placeholder="月"
       maxlength="2"
       type="text"
+      :disabled="isDisabled"
     >
     <span v-if="type === 'date'">/</span>
     <input
@@ -142,9 +165,10 @@ if (props.modelValue) {
       placeholder="日"
       maxlength="2"
       type="text"
-    >  
-    <ErrorMessage :errorMessage="errorMessage" />
-  </InputContainer>
+      :disabled="isDisabled"
+    >
+    <ErrorMessage :errorMessages="errorMessage ? [errorMessage] : []" />
+  </InputBox>
 </template>
 
 <style lang="scss" module>

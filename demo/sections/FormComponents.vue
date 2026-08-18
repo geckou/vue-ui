@@ -19,6 +19,11 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import SlideDownUi from '@/components/SlideDownUi.vue'
 import DropdownUi from '@/components/DropdownUi.vue'
 import ModalBox from '@/components/ModalBox.vue'
+import DatePicker from '@/components/DatePicker.vue'
+import DateRangePicker from '@/components/DateRangePicker.vue'
+import DateSelector from '@/components/DateSelector.vue'
+import TextButton from '@/components/TextButton.vue'
+import { FormValidationManager } from '@/scripts/form-validation-manager'
 
 const SELECT_BOX_OPTIONS = [
   { label: '未選択', value: '' },
@@ -57,6 +62,10 @@ const checks = ref<string[]>(['mail'])
 const radios = ref('personal')
 const toggle = ref(false)
 const isLoading = ref(false)
+const validationManager = new FormValidationManager()
+const date = ref('')
+const dateRange = ref({ start: '', end: '' })
+const birthday = ref('')
 const isModalShown = ref(false)
 
 const submit = () => {
@@ -151,6 +160,32 @@ const CODE = {
   <template #header><h4>確認</h4></template>
   <p>この内容で送信します。</p>
 </ModalBox>`,
+  datePicker: `<DatePicker
+  v-model="date"
+  name="startedOn"
+  :formValidationManager="validationManager"
+  isRequired
+/>
+
+<!-- 全入力が有効になったかどうか -->
+<span>{{ validationManager.isAllValid.value }}</span>`,
+  dateRange: `<DateRangePicker
+  v-model="dateRange"
+  name="period"
+  size="small"
+/>
+<!-- modelValue は { start: string, end: string } -->`,
+  dateSelector: `<DateSelector
+  v-model="birthday"
+  name="birthday"
+  :formValidationManager="validationManager"
+  isRequired
+/>`,
+  textButton: `<TextButton
+  text="削除"
+  variant="caution"
+  @click="reset"
+/>`,
   misc: `<ErrorMessage :errorMessages="['必須項目です']" />
 <LoadingSpinner />`,
 }
@@ -417,6 +452,78 @@ const formState = () => JSON.stringify({
     </DemoSection>
 
     <DemoSection
+      id="datepicker"
+      title="DatePicker"
+      description="ネイティブの日付入力と年 / 月 / 日の直接入力を併用。FormValidationManager に検証結果を通知する。"
+      :code="CODE.datePicker"
+    >
+      <div :class="$style.narrow">
+        <DatePicker
+          v-model="date"
+          name="startedOn"
+          :formValidationManager="validationManager"
+          isRequired
+        />
+        <p :class="$style.note">
+          modelValue: {{ date || '—' }} / フォーム全体の有効状態: {{ validationManager.isAllValid.value }}
+        </p>
+      </div>
+    </DemoSection>
+
+    <DemoSection
+      id="daterangepicker"
+      title="DateRangePicker"
+      description="開始日と終了日の組。互いの min / max が自動で連動する。"
+      :code="CODE.dateRange"
+    >
+      <DateRangePicker
+        v-model="dateRange"
+        name="period"
+        size="small"
+      />
+      <p :class="$style.note">
+        modelValue: {{ dateRange.start || '—' }} 〜 {{ dateRange.end || '—' }}
+      </p>
+    </DemoSection>
+
+    <DemoSection
+      id="dateselector"
+      title="DateSelector"
+      description="年 / 月 / 日をプルダウンで選ぶ形式。生年月日など過去日の入力向け。"
+      :code="CODE.dateSelector"
+    >
+      <DateSelector
+        v-model="birthday"
+        name="birthday"
+        :formValidationManager="validationManager"
+        isRequired
+      />
+      <p :class="$style.note">
+        modelValue: {{ birthday || '—' }}
+      </p>
+    </DemoSection>
+
+    <DemoSection
+      id="textbutton"
+      title="TextButton"
+      description="枠のないテキストリンク調のボタン。variant を caution にすると警告色になる。"
+      :code="CODE.textButton"
+    >
+      <div :class="$style.row">
+        <TextButton text="編集" />
+        <TextButton
+          text="削除"
+          variant="caution"
+          @click="() => { date = ''; birthday = ''; dateRange = { start: '', end: '' } }"
+        />
+        <TextButton
+          text="無効"
+          isDisabled
+        />
+      </div>
+    </DemoSection>
+
+    <DemoSection
       id="misc"
       title="ErrorMessage / LoadingSpinner"
       :code="CODE.misc"
@@ -483,6 +590,12 @@ const formState = () => JSON.stringify({
 .plain {
   margin   : 0;
   font-size: .875rem;
+}
+
+.note {
+  margin   : .75rem 0 0;
+  color    : var(--gray);
+  font-size: .8125rem;
 }
 
 .menu {

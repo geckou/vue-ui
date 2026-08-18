@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import { ref, computed, watch, watchEffect } from 'vue'
-import { FormValidationManager } from '~/scripts/form-validation-manager'
+import { FormValidationManager } from '@/scripts/form-validation-manager'
+import InputBox from '@/components/InputBox.vue'
+import KeyboardArrowDownIcon from '@/components/Icon/KeyboardArrowDownIcon.vue'
+import TextButton from '@/components/TextButton.vue'
+
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: string): void }>()
 
 type Date = {
@@ -16,7 +20,6 @@ const props = withDefaults(defineProps<{
   formValidationManager?: FormValidationManager | null
   type?: 'date' | 'month'
 }>(), {
-  isDisabled           : false,
   formValidationManager: null,
   type                 : 'date',
 })
@@ -82,15 +85,26 @@ watchEffect(() => {
   }
 })
 
+const setValid = (isValid: boolean): void => {
+  if (props.formValidationManager) props.formValidationManager.setValid(props.name, isValid)
+}
+
+setValid(!props.isRequired)
+
 watch(() => birthday.value, newValue => {
-  if (!newValue.year && !newValue.month && !newValue.day) emit('update:modelValue', '')
-  else if (!newValue.year || !newValue.month || !newValue.day) return
-  else emit('update:modelValue', `${newValue.year}-${newValue.month}-${newValue.day}`)
+  const isFilled = Boolean(newValue.year && newValue.month && (props.type === 'month' || newValue.day))
+  const isEmpty = !newValue.year && !newValue.month && !newValue.day
+
+  setValid(props.isRequired ? isFilled : isFilled || isEmpty)
+
+  if (isEmpty) emit('update:modelValue', '')
+  else if (!isFilled) return
+  else emit('update:modelValue', [newValue.year, newValue.month, newValue.day].filter(Boolean).join('-'))
 }, { deep: true })
 </script>
 
 <template>
-  <InputContainer :class="$style.date_selector">
+  <InputBox :class="$style.date_selector">
     <div
       :class="[$style.selector_wrapper]"
       @click="openDropdown($event)"
@@ -115,7 +129,7 @@ watch(() => birthday.value, newValue => {
           {{ year.label }}
         </option>
       </select>
-      <IconChevronDown />
+      <KeyboardArrowDownIcon />
     </div>
     <div
       :class="[$style.selector_wrapper]"
@@ -132,7 +146,6 @@ watch(() => birthday.value, newValue => {
         >
           月
         </option>
-        {{ monthOptions }}
         <option
           v-for="month in monthOptions"
           :key="month.value"
@@ -141,9 +154,10 @@ watch(() => birthday.value, newValue => {
           {{ month.label }}
         </option>
       </select>
-      <IconChevronDown />
+      <KeyboardArrowDownIcon />
     </div>
     <div
+      v-if="type === 'date'"
       :class="[$style.selector_wrapper]"
       @click="openDropdown($event)"
     >
@@ -166,7 +180,7 @@ watch(() => birthday.value, newValue => {
           {{ day.label }}
         </option>
       </select>
-      <IconChevronDown />
+      <KeyboardArrowDownIcon />
     </div>
     <TextButton
       text="削除"
@@ -174,7 +188,7 @@ watch(() => birthday.value, newValue => {
       :class="$style.delete_button"
       @click="birthday = { year: '', month: '', day: '' }"
     />
-  </InputContainer>
+  </InputBox>
 </template>
 
 <style lang="scss" module>

@@ -14,8 +14,10 @@ import RadioButtons from '@/components/RadioButtons.vue'
 import ToggleButton from '@/components/ToggleButton.vue'
 import InputBox from '@/components/InputBox.vue'
 import InputGroup from '@/components/InputGroup.vue'
-// NOTE: DatePicker / DateRangePicker / DateSelector は Nuxt の自動 import と
-//       アプリ側の FormValidationManager に依存しているため、ここでは公開していない
+import TextButton from '@/components/TextButton.vue'
+import DatePicker from '@/components/DatePicker.vue'
+import DateRangePicker from '@/components/DateRangePicker.vue'
+import DateSelector from '@/components/DateSelector.vue'
 import DropdownUi from '@/components/DropdownUi.vue'
 import ModalBox from '@/components/ModalBox.vue'
 import PopupBox from '@/components/PopupBox.vue'
@@ -50,6 +52,10 @@ const components = {
   ToggleButton,
   InputBox,
   InputGroup,
+  TextButton,
+  DatePicker,
+  DateRangePicker,
+  DateSelector,
   DropdownUi,
   ModalBox,
   PopupBox,
@@ -92,6 +98,10 @@ export {
   ToggleButton,
   InputBox,
   InputGroup,
+  TextButton,
+  DatePicker,
+  DateRangePicker,
+  DateSelector,
   DropdownUi,
   ModalBox,
   PopupBox,
@@ -113,3 +123,4 @@ export {
 }
 
 export { LIST_THEME } from '@/const/list-theme'
+export { FormValidationManager } from '@/scripts/form-validation-manager'
