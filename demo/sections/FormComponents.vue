@@ -187,8 +187,15 @@ const CODE = {
   variant="caution"
   @click="reset"
 />`,
-  misc: `<ErrorMessage :errorMessages="['必須項目です']" />
-<LoadingSpinner />`,
+  misc: `<!-- ErrorMessage は position: absolute。基準にしたい要素を relative にしておく -->
+<div style="position: relative;">
+  <ErrorMessage :errorMessages="['必須項目です']" />
+</div>
+
+<!-- LoadingSpinner はサイズを持たないので親で指定する -->
+<span style="display: block; inline-size: 2rem; fill: var(--primary-color);">
+  <LoadingSpinner />
+</span>`,
 }
 
 const formState = () => JSON.stringify({
@@ -549,11 +556,16 @@ const formState = () => JSON.stringify({
       id="misc"
       :sources="[{ label: 'ErrorMessage', path: componentSource('ErrorMessage') }, { label: 'LoadingSpinner', path: componentSource('LoadingSpinner') }]"
       title="ErrorMessage / LoadingSpinner"
+      description="ErrorMessage は position: absolute の吹き出しなので position: relative な親の中に置く。LoadingSpinner はサイズを持たない SVG なので、親要素で大きさと色を指定する。"
       :code="CODE.misc"
     >
       <div :class="$style.row">
-        <ErrorMessage :errorMessages="['必須項目です', '半角英字で入力してください']" />
-        <LoadingSpinner />
+        <div :class="$style.errorAnchor">
+          <ErrorMessage :errorMessages="['必須項目です', '半角英字で入力してください']" />
+        </div>
+        <span :class="$style.spinner">
+          <LoadingSpinner />
+        </span>
       </div>
     </DemoSection>
   </div>
@@ -568,6 +580,20 @@ const formState = () => JSON.stringify({
 
 .narrow {
   max-width: 28rem;
+}
+
+.errorAnchor {
+  position         : relative;
+  inline-size      : 18rem;
+  block-size       : 1.5rem;
+  margin-block-end : 3.5rem;
+}
+
+.spinner {
+  display    : block;
+  inline-size: 2rem;
+  block-size : 2rem;
+  fill       : var(--primary-color);
 }
 
 .row {
