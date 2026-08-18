@@ -170,9 +170,26 @@ img {
   max-height: 100%;
 }
 
+/* 日本語の折り返しを文節単位にする（非対応ブラウザでは normal のまま） */
+h1,
+h2,
+h3,
+h4,
+p,
+li,
+dt,
+dd,
+label,
+span {
+  word-break   : auto-phrase;
+  overflow-wrap: anywhere;
+}
+
 code {
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  font-size  : .875em;
+  font-family  : 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size    : .875em;
+  word-break   : normal;
+  overflow-wrap: break-word;
 }
 
 /**
