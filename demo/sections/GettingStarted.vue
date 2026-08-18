@@ -112,29 +112,34 @@ const CSS_VARS = `:root {
 }
 
 .hero {
-  padding         : 2rem;
-  border-radius   : 12px;
-  background      : linear-gradient(135deg, #1f7a6c, #2b4c7e);
-  color           : var(--white);
+  padding      : var(--sp-max) var(--sp-large);
+  border       : 1px solid var(--border-color);
+  border-radius: var(--radius-size);
+  background   : linear-gradient(135deg, #15143a, #1c4ac9 140%);
+  color        : #e0e0e4;
 }
 
 .eyebrow {
-  margin        : 0 0 .5rem;
-  font-size     : .8125rem;
-  letter-spacing: .12em;
-  opacity       : .8;
+  margin        : 0 0 var(--sp-medium);
+  font-size     : var(--fs-min);
+  letter-spacing: var(--letter-spacing-normal);
+  opacity       : .75;
 }
 
 .title {
-  margin   : 0 0 .75rem;
-  font-size: clamp(1.4rem, 1rem + 1.6vw, 2rem);
+  margin        : 0 0 var(--sp-medium);
+  font-size     : var(--fs-max);
+  font-weight   : 500;
+  letter-spacing: var(--letter-spacing-normal);
+  line-height   : var(--line-height-narrow);
 }
 
 .lead {
-  max-width: 46rem;
-  margin   : 0;
-  font-size: .9375rem;
-  opacity  : .92;
+  max-width  : 46rem;
+  margin     : 0;
+  font-size  : var(--fs-small);
+  line-height: var(--line-height-normal);
+  opacity    : .88;
 
   code {
     padding         : .1em .4em;
@@ -147,25 +152,28 @@ const CSS_VARS = `:root {
   display         : flex;
   flex-direction  : column;
   gap             : .75rem;
-  padding         : 1.5rem;
+  padding         : var(--sp-large);
   border          : 1px solid var(--border-color);
-  border-radius   : 10px;
-  background-color: var(--white);
+  border-radius   : var(--radius-size);
+  background-color: var(--surface-color);
 }
 
 .heading {
-  margin   : 0;
-  font-size: 1.125rem;
+  margin        : 0;
+  font-size     : var(--fs-large);
+  font-weight   : 500;
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .text {
-  margin   : 0;
-  color    : var(--gray);
-  font-size: .875rem;
+  margin     : 0;
+  color      : var(--gray);
+  font-size  : var(--fs-small);
+  line-height: var(--line-height-normal);
 
   code {
     padding         : .1em .4em;
-    border-radius   : 4px;
+    border-radius   : var(--radius-small);
     background-color: var(--sub-color);
     color           : var(--primary-color);
   }
@@ -178,22 +186,25 @@ const CSS_VARS = `:root {
 }
 
 .card {
-  padding         : 1rem;
-  border          : 1px solid var(--border-color);
-  border-radius   : 8px;
-  background-color: var(--base-color);
+  padding         : var(--sp-large);
+  border          : 1px solid var(--light-border-color);
+  border-radius   : var(--radius-size);
+  background-color: var(--surface-muted);
 }
 
 .cardTitle {
-  margin   : 0 0 .35rem;
-  font-size: .9375rem;
-  color    : var(--primary-color);
+  margin        : 0 0 var(--sp-small);
+  color         : var(--primary-color);
+  font-size     : var(--fs-medium);
+  font-weight   : 500;
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .cardText {
-  margin   : 0;
-  color    : var(--gray);
-  font-size: .8125rem;
+  margin    : 0;
+  color     : var(--gray);
+  font-size : var(--fs-smaller);
+  line-height: var(--line-height-narrow);
   word-break: break-word;
 }
 </style>

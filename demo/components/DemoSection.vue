@@ -33,7 +33,7 @@ const isCodeOpen = ref(false)
       </p>
     </header>
 
-    <div :class="[$style.preview, { [$style.contained]: contained }]">
+    <div :class="['demo-preview', $style.preview, { [$style.contained]: contained }]">
       <slot />
     </div>
 
@@ -58,10 +58,10 @@ const isCodeOpen = ref(false)
   display         : flex;
   flex-direction  : column;
   gap             : 1rem;
-  padding         : 1.5rem;
+  padding         : var(--sp-large);
   border          : 1px solid var(--border-color);
-  border-radius   : 10px;
-  background-color: var(--white);
+  border-radius   : var(--radius-size);
+  background-color: var(--surface-color);
   scroll-margin-top: 5rem;
 }
 
@@ -72,21 +72,25 @@ const isCodeOpen = ref(false)
 }
 
 .title {
-  margin   : 0;
-  font-size: 1.125rem;
+  margin        : 0;
+  font-size     : var(--fs-large);
+  font-weight   : 500;
+  letter-spacing: var(--letter-spacing-normal);
+  line-height   : var(--line-height-narrow);
 }
 
 .description {
-  margin   : 0;
-  color    : var(--gray);
-  font-size: .875rem;
+  margin     : 0;
+  color      : var(--gray);
+  font-size  : var(--fs-small);
+  line-height: var(--line-height-narrow);
 }
 
 .preview {
-  padding         : 1.5rem;
-  border          : 1px dashed var(--border-color);
-  border-radius   : 8px;
-  background-color: var(--base-color);
+  padding         : var(--sp-large);
+  border          : 1px solid var(--light-border-color);
+  border-radius   : var(--radius-size);
+  background-color: var(--surface-muted);
 
   &.contained {
     container-type: inline-size;
@@ -95,12 +99,14 @@ const isCodeOpen = ref(false)
 
 .toggle {
   margin-bottom   : .5rem;
-  padding         : .35rem .8rem;
+  padding         : .35rem .9rem;
   border          : 1px solid var(--border-color);
   border-radius   : 999px;
-  background-color: var(--white);
+  background-color: transparent;
   color           : var(--text-color);
-  font-size       : .8125rem;
+  font-family     : inherit;
+  font-size       : var(--fs-smaller);
+  letter-spacing  : var(--letter-spacing-narrow);
   cursor          : pointer;
 
   &:hover {

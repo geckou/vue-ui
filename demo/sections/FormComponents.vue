@@ -559,7 +559,7 @@ const formState = () => JSON.stringify({
   flex-direction: column;
   gap           : .25rem;
   margin        : 0;
-  font-size     : .875rem;
+  font-size     : var(--fs-small);
 
   > div {
     display              : grid;
@@ -581,21 +581,21 @@ const formState = () => JSON.stringify({
   overflow        : auto;
   margin          : 0;
   padding         : .75rem;
-  border-radius   : 6px;
-  background-color: #1b1f27;
-  color           : #d8dee9;
-  font-size       : .8125rem;
+  border-radius   : var(--radius-size);
+  background-color: var(--code-background);
+  color           : var(--code-text);
+  font-size       : var(--fs-smaller);
 }
 
 .plain {
   margin   : 0;
-  font-size: .875rem;
+  font-size: var(--fs-small);
 }
 
 .note {
-  margin   : .75rem 0 0;
+  margin   : var(--sp-medium) 0 0;
   color    : var(--gray);
-  font-size: .8125rem;
+  font-size: var(--fs-smaller);
 }
 
 .menu {

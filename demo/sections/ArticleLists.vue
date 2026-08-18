@@ -201,21 +201,24 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
   display         : flex;
   flex-direction  : column;
   gap             : .75rem;
-  padding         : 1.5rem;
+  padding         : var(--sp-large);
   border          : 1px solid var(--border-color);
-  border-radius   : 10px;
-  background-color: var(--white);
+  border-radius   : var(--radius-size);
+  background-color: var(--surface-color);
 }
 
 .introTitle {
-  margin   : 0;
-  font-size: 1.125rem;
+  margin        : 0;
+  font-size     : var(--fs-large);
+  font-weight   : 500;
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .introText {
-  margin   : 0;
-  color    : var(--gray);
-  font-size: .875rem;
+  margin     : 0;
+  color      : var(--gray);
+  font-size  : var(--fs-small);
+  line-height: var(--line-height-normal);
 
   code {
     padding         : .1em .4em;
@@ -232,17 +235,18 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
   display         : flex;
   flex-direction  : column;
   gap             : .5rem;
-  padding         : 1rem 1.5rem;
+  padding         : var(--sp-medium) var(--sp-large);
   border          : 1px solid var(--border-color);
-  border-radius   : 10px;
-  background-color: rgba(255, 255, 255, .92);
-  backdrop-filter : blur(6px);
+  border-radius   : var(--radius-size);
+  background-color: color-mix(in srgb, var(--base-color) 90%, transparent);
+  backdrop-filter : blur(8px);
 }
 
 .controlsTitle {
-  margin   : 0;
-  color    : var(--gray);
-  font-size: .75rem;
+  margin        : 0;
+  color         : var(--gray);
+  font-size     : var(--fs-min);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .controlsBody {
@@ -260,8 +264,8 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
 }
 
 .selectNote {
-  color    : var(--gray);
-  font-size: .75rem;
+  color      : var(--gray);
+  font-size  : var(--fs-min);
   white-space: nowrap;
 }
 </style>

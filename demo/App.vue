@@ -190,9 +190,9 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   display         : flex;
   align-items     : center;
   gap             : 1rem;
-  padding         : .75rem 1.25rem;
+  padding         : var(--sp-medium) var(--sp-large);
   border-bottom   : 1px solid var(--border-color);
-  background-color: rgba(255, 255, 255, .92);
+  background-color: color-mix(in srgb, var(--base-color) 88%, transparent);
   backdrop-filter : blur(8px);
 }
 
@@ -206,39 +206,46 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
 .brandMark {
   display         : grid;
   place-items     : center;
-  width           : 2rem;
-  height          : 2rem;
-  border-radius   : 8px;
-  background-color: var(--primary-color);
-  color           : var(--white);
-  font-size       : .8125rem;
-  font-weight     : bold;
+  width           : 2.25rem;
+  height          : 2.25rem;
+  border-radius   : 50%;
+  background-color: var(--gk-blue);
+  color           : #fff;
+  font-size       : var(--fs-smaller);
+  font-weight     : 700;
+  letter-spacing  : var(--letter-spacing-narrow);
 }
 
 .brandName {
-  display  : block;
-  font-size: .9375rem;
-  line-height: 1.2;
+  display       : block;
+  font-size     : var(--fs-medium);
+  font-weight   : 500;
+  letter-spacing: var(--letter-spacing-normal);
+  line-height   : var(--line-height-tight);
 }
 
 .brandSub {
   display  : block;
   color    : var(--gray);
-  font-size: .75rem;
+  font-size: var(--fs-min);
+  line-height: var(--line-height-narrow);
 }
 
 .headerNav {
-  margin-left: auto;
-  font-size  : .875rem;
+  margin-left   : auto;
+  font-size     : var(--fs-small);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .navToggle {
   display         : none;
   padding         : .35rem .7rem;
   border          : 1px solid var(--border-color);
-  border-radius   : 6px;
-  background-color: var(--white);
-  font-size       : .8125rem;
+  border-radius   : var(--radius-size);
+  background-color: transparent;
+  color           : var(--text-color);
+  font-family     : inherit;
+  font-size       : var(--fs-smaller);
   cursor          : pointer;
 }
 
@@ -271,13 +278,15 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
 }
 
 .navPage {
-  padding         : .35rem .5rem;
+  padding         : .4rem .6rem;
   border          : none;
-  border-radius   : 6px;
+  border-radius   : var(--radius-size);
   background-color: transparent;
   color           : var(--text-color);
-  font-size       : .875rem;
-  font-weight     : bold;
+  font-family     : inherit;
+  font-size       : var(--fs-small);
+  font-weight     : 500;
+  letter-spacing  : var(--letter-spacing-normal);
   text-align      : left;
   cursor          : pointer;
 
@@ -286,8 +295,8 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   }
 
   &.current {
-    background-color: var(--primary-color);
-    color           : var(--white);
+    background-color: var(--gk-blue);
+    color           : #fff;
   }
 }
 
@@ -306,7 +315,9 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   border-radius   : 0;
   background-color: transparent;
   color           : var(--gray);
-  font-size       : .8125rem;
+  font-family     : inherit;
+  font-size       : var(--fs-smaller);
+  letter-spacing  : var(--letter-spacing-narrow);
   text-align      : left;
   cursor          : pointer;
 
@@ -320,14 +331,15 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   flex     : 1;
   min-width: 0;
   max-width: 72rem;
-  padding  : 1.5rem 1.5rem 4rem;
+  padding  : var(--sp-large) var(--sp-large) var(--sp-max);
 }
 
 .footer {
-  margin-top: 3rem;
-  color     : var(--gray);
-  font-size : .8125rem;
-  text-align: center;
+  margin-top    : var(--sp-larger);
+  color         : var(--gray);
+  font-size     : var(--fs-min);
+  letter-spacing: var(--letter-spacing-normal);
+  text-align    : center;
 }
 
 @media (max-width: 900px) {
@@ -347,7 +359,7 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
       width           : min(80vw, 20rem);
       height          : calc(100vh - 3.5rem);
       border-right    : 1px solid var(--border-color);
-      background-color: var(--white);
+      background-color: var(--base-color);
     }
   }
 

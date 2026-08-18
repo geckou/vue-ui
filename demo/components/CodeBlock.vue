@@ -40,9 +40,9 @@ const copy = async () => {
 <style lang="scss" module>
 .wrapper {
   overflow        : hidden;
-  border          : 1px solid #2a2f3a;
+  border          : 1px solid var(--code-border);
   border-radius   : var(--radius-size);
-  background-color: #1b1f27;
+  background-color: var(--code-background);
 }
 
 .head {
@@ -50,28 +50,30 @@ const copy = async () => {
   align-items    : center;
   justify-content: space-between;
   padding        : .4rem .75rem;
-  border-bottom  : 1px solid #2a2f3a;
-  background-color: #232935;
+  border-bottom   : 1px solid var(--code-border);
+  background-color: rgba(224, 224, 228, .04);
 }
 
 .language {
   color         : #8a94a6;
-  font-size     : .75rem;
+  font-size     : var(--fs-min);
   letter-spacing: .08em;
   text-transform: uppercase;
 }
 
 .copy {
   padding         : .2rem .6rem;
-  border          : 1px solid #39414f;
-  border-radius   : 4px;
+  border          : 1px solid var(--code-border);
+  border-radius   : var(--radius-small);
   background-color: transparent;
   color           : #c7d0de;
-  font-size       : .75rem;
+  font-family     : inherit;
+  font-size       : var(--fs-min);
+  letter-spacing  : var(--letter-spacing-narrow);
   cursor          : pointer;
 
   &:hover {
-    background-color: #2c3341;
+    background-color: rgba(224, 224, 228, .08);
   }
 }
 
@@ -79,9 +81,9 @@ const copy = async () => {
   overflow  : auto;
   margin    : 0;
   padding   : 1rem;
-  color     : #d8dee9;
-  font-size : .8125rem;
-  line-height: 1.6;
+  color      : var(--code-text);
+  font-size  : var(--fs-smaller);
+  line-height: 1.7;
   tab-size  : 2;
 }
 </style>
