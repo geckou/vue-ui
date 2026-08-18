@@ -3,8 +3,9 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
 // デモサイト（GitHub Pages）用の設定
-// リポジトリ配下に公開するため base は /vue-ui/ 。ルートで公開する場合は BASE_PATH=/ を指定
-const base = process.env.BASE_PATH ?? '/vue-ui/'
+// 独自ドメイン（https://ui.geckou.net/）のルート公開なので base は / 。
+// リポジトリ配下（geckou.github.io/vue-ui/）へ出す場合は BASE_PATH=/vue-ui/ を指定
+const base = process.env.BASE_PATH ?? '/'
 
 export default defineConfig({
   root   : resolve(__dirname, 'demo'),

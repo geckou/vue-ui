@@ -30,8 +30,6 @@ jobs:
 
       - name: Build demo site
         run: yarn build:demo
-        env:
-          BASE_PATH: /${{ github.event.repository.name }}/
 
       - name: Add .nojekyll
         run: touch demo-dist/.nojekyll

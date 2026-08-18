@@ -2,7 +2,7 @@
 
 Vue 3 用の再利用可能な UI コンポーネント集。入力フォーム系のコンポーネントと、WordPress REST API の記事データをそのまま渡せる記事一覧コンポーネント（10 レイアウト）を収録しています。
 
-**デモサイト: https://geckou.github.io/vue-ui/**
+**デモサイト: https://ui.geckou.net/**
 
 ## Installation
 
@@ -191,7 +191,7 @@ const articles = ref<any[]>([])
 
 ```bash
 yarn install
-yarn dev          # デモサイトを起動（http://localhost:5555/vue-ui/）
+yarn dev          # デモサイトを起動（http://localhost:5555/）
 yarn build        # 配布用 dist を生成
 yarn build:demo   # デモサイトを demo-dist に出力
 ```
