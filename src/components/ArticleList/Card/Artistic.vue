@@ -62,7 +62,7 @@ defineProps<{
         v-if="postConfig.tag"
         :article="article"
         :label="{
-          color   : 'var(--text-color)',
+          color : 'var(--text-color)',
           fontSize: 'smaller',
         }"
         :class="$style.tag"
@@ -85,8 +85,8 @@ defineProps<{
         :categoryData="categories"
         :label="{
           backgroundColor: 'var(--main-color)',
-          color          : 'var(--white)',
-          fontSize       : 'small',
+          color : 'var(--white)',
+          fontSize : 'small',
         }"
         :class="$style.category"
         style="grid-area: category;"

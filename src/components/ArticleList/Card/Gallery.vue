@@ -58,8 +58,8 @@ defineProps<{
       :name="article._embedded.author[0].name"
       :class="$style.author"
       :text="{
-        color     : 'var(--white)',
-        fontSize  : isPickUpItem ? 'medium' : 'small',
+        color : 'var(--white)',
+        fontSize : isPickUpItem ? 'medium' : 'small',
         fontWeight: 'bold',
       }"
       style="grid-area: author;"
@@ -69,7 +69,7 @@ defineProps<{
       :categoryIds="article.categories"
       :categoryData="categories"
       :label="{
-        color   : 'var(--white)',
+        color : 'var(--white)',
         fontSize: isPickUpItem ? 'medium': 'small',
       }"
       :class="$style.category"
@@ -79,7 +79,7 @@ defineProps<{
       v-if="postConfig.tag"
       :article="article"
       :label="{
-        color   : 'var(--white)',
+        color : 'var(--white)',
         fontSize: isPickUpItem ? 'medium': 'small',
       }"
       :class="$style.tag"

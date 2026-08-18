@@ -91,7 +91,7 @@ defineProps<{
       :categoryIds="article.categories"
       :categoryData="categories"
       :label="{
-        color   : 'var(--gray)',
+        color : 'var(--gray)',
         fontSize: 'smaller',
       }"
       :class="$style.category"
@@ -101,7 +101,7 @@ defineProps<{
       v-if="postConfig.tag"
       :article="article"
       :label="{
-        color   : 'var(--gray)',
+        color : 'var(--gray)',
         fontSize: 'smaller',
       }"
       :class="$style.tag"

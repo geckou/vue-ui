@@ -49,7 +49,7 @@ defineProps<{
       :categoryIds="article.categories"
       :categoryData="categories"
       :label="{
-        color   : 'var(--main-color)',
+        color : 'var(--main-color)',
         fontSize: 'small',
       }"
       :class="$style.category"
@@ -69,7 +69,7 @@ defineProps<{
       v-if="postConfig.tag"
       :article="article"
       :label="{
-        color   : 'var(--gray)',
+        color : 'var(--gray)',
         fontSize: 'small',
       }"
       :class="$style.tag"
@@ -80,7 +80,7 @@ defineProps<{
       :name="article._embedded.author[0].name"
       :class="$style.author"
       :text="{
-        color      : 'var(--gray)',
+        color : 'var(--gray)',
         preposition: 'by',
       }"
       fontSize="small"

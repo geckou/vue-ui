@@ -43,8 +43,8 @@ const iconName = props.icon.name === 'FolderIcon' ? FolderIcon : TagIcon
     :style="{ '--icon-color': icon.color }"
   >
     <component
-      v-if="icon.name"
       :is="iconName"
+      v-if="icon.name"
       :class="$style.icon"
       :style="{
         '--icon-color': icon.color,
@@ -61,11 +61,11 @@ const iconName = props.icon.name === 'FolderIcon' ? FolderIcon : TagIcon
           { [$style.delimiter]: delimiter },
         ]"
         :style="{
-          '--label-padding'         : !label.backgroundColor || label.backgroundColor === 'transparent' ? '0px': 'var(--sp-min) var(--sp-small)',
+          '--label-padding' : !label.backgroundColor || label.backgroundColor === 'transparent' ? '0px': 'var(--sp-min) var(--sp-small)',
           '--label-background-color': label.backgroundColor ?? 'transparent',
-          '--label-color'           : label.color ?? 'var(--text-color)',
-          '--label-font-size'       : label.fontSize ?? 'var(--fs-small)',
-          '--label-font-weight'     : label.fontWeight ?? 'normal',
+          '--label-color' : label.color ?? 'var(--text-color)',
+          '--label-font-size' : label.fontSize ?? 'var(--fs-small)',
+          '--label-font-weight' : label.fontWeight ?? 'normal',
         }"
         :data-delimiter="delimiter"
       >

@@ -21,8 +21,8 @@ const parsedDate = parseISO(props.date)
   <time
     :class="$style.posted_date"
     :style="{
-      '--date-color'      : color,
-      '--date-font-size'  : fontSize,
+      '--date-color' : color,
+      '--date-font-size' : fontSize,
       '--date-font-weight': fontWeight,
     }"
   >

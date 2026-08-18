@@ -12,6 +12,7 @@ withDefaults(defineProps<{
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-html -- WordPress の excerpt.rendered は HTML を含むため意図的に描画する -->
   <div
     :class="$style.excerpt"
     :style="{

@@ -62,9 +62,9 @@ defineProps<{
       :icon="{ color: 'var(--main-color)' }"
       :label="{
         backgroundColor: 'var(--main-color)',
-        color          : 'var(--white)',
-        fontSize       : 'small',
-        shape          : 'rounded',
+        color : 'var(--white)',
+        fontSize : 'small',
+        shape : 'rounded',
       }"
       :class="$style.category"
       style="grid-area: category;"
@@ -75,9 +75,9 @@ defineProps<{
       :icon="{ color: 'var(--sub-color)' }"
       :label="{
         backgroundColor: 'var(--sub-color)',
-        color          : 'var(--white)',
-        fontSize       : 'smaller',
-        shape          : 'rounded',
+        color : 'var(--white)',
+        fontSize : 'smaller',
+        shape : 'rounded',
       }"
       :class="$style.tag"
       style="grid-area: tag;"

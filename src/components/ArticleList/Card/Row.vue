@@ -32,8 +32,8 @@ defineProps<{
       :categoryIds="article.categories"
       :categoryData="categories"
       :label="{
-        color          : 'var(--gray)',
-        fontSize       : 'clamp(24px, 0.55rem + 2.99vw, 40px)',
+        color : 'var(--gray)',
+        fontSize : 'clamp(24px, 0.55rem + 2.99vw, 40px)',
       }"
       :class="$style.category"
       style="grid-area: category;"
@@ -70,7 +70,7 @@ defineProps<{
       v-if="postConfig.tag"
       :article="article"
       :label="{
-        color   : 'var(--text-color)',
+        color : 'var(--text-color)',
         fontSize: 'small',
       }"
       :class="$style.tag"
@@ -84,7 +84,7 @@ defineProps<{
       :class="$style.author"
       :text="{
         fontSize: 'small',
-        color   : 'var(--gray)',
+        color : 'var(--gray)',
       }"
       style="grid-area: author;"
     />

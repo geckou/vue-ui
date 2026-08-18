@@ -14,7 +14,7 @@ defineProps<{
 </script>
 
 <template>
-    <GenericArticleList
+  <GenericArticleList
     theme="rounded"
     :columnNumber="3"
     :articles="articles"

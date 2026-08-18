@@ -141,34 +141,34 @@ onMounted(() => {
 </script>
 
 <template>
-    <ul
-      ref="listElement"
-      :style="{
-        ['--column-number']: columnNumber,
-        ['--tablet-column-number']: columnNumber - 1 ? columnNumber - 1 : 1,
+  <ul
+    ref="listElement"
+    :style="{
+      ['--column-number']: columnNumber,
+      ['--tablet-column-number']: columnNumber - 1 ? columnNumber - 1 : 1,
+    }"
+    :class="$style.list"
+  >
+    <li
+      v-for="(article, index) in articles"
+      :key="article.id"
+      :class="$style.item"
+      :style="{ 
+        animationDelay: `${Number(index) * .1}s`,
+        gridRow: calcGridRowValue(Number(index)) || 'auto',
+        gridColumn: calcGridColumnValue(Number(index)) || 'auto',
       }"
-      :class="$style.list"
     >
-      <li
-        v-for="(article, index) in articles"
-        :class="$style.item"
-        :style="{ 
-          animationDelay: `${Number(index) * .1}s`,
-          gridRow: calcGridRowValue(Number(index)) || 'auto',
-          gridColumn: calcGridColumnValue(Number(index)) || 'auto',
-        }"
-        :key="article.id"
-      >
-        <GridCard
-          :path="returnArticlePath(postConfig, domainToUse, article.id)"
-          :article="article"
-          :isPickUpItem="Number(index) === 0 && isEnabledPickUp"
-          :postConfig="postConfig"
-          :categories="categories"
-          :direction="returnItemDirection(Number(index))"
-        />
-      </li>
-    </ul>
+      <GridCard
+        :path="returnArticlePath(postConfig, domainToUse, article.id)"
+        :article="article"
+        :isPickUpItem="Number(index) === 0 && isEnabledPickUp"
+        :postConfig="postConfig"
+        :categories="categories"
+        :direction="returnItemDirection(Number(index))"
+      />
+    </li>
+  </ul>
 </template>
 
 <style lang="scss" module>

@@ -15,8 +15,8 @@ withDefaults(defineProps<{
   <div
     :class="$style.heading"
     :style="{
-      '--heading-color'      : color,
-      '--heading-font-size'  : fontSize,
+      '--heading-color' : color,
+      '--heading-font-size' : fontSize,
       '--heading-font-weight': fontWeight,
     }"
   >

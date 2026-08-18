@@ -68,8 +68,8 @@ const listItem = computed(() => {
   >
     <li
       v-for="(article, index) in articles"
-      :style="{animationDelay: `${Number(index) * .1}s`}"
       :key="article.id"
+      :style="{animationDelay: `${Number(index) * .1}s`}"
     >
       <component
         :is="listItem"
