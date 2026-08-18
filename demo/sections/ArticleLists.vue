@@ -3,6 +3,8 @@
 import type { ListSettings } from '@/types'
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import CodeBlock from '~demo/components/CodeBlock.vue'
+import GithubIcon from '~demo/components/GithubIcon.vue'
+import { listSource, sourceUrl } from '~demo/data/repository'
 import LabeledCheckbox from '@/components/LabeledCheckbox.vue'
 import SelectBox from '@/components/SelectBox.vue'
 import { ARTICLES, ARTICLES_WITHOUT_IMAGE, CATEGORIES } from '~demo/data/articles'
@@ -64,6 +66,7 @@ const COLOR_LABELS: Record<keyof typeof LIGHT_COLORS, string> = {
 
 const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches
 
+const isControlsOpen = ref(true)
 const theme = ref('standard')
 const columnNumber = ref('3')
 const isEnabledPickUp = ref(true)
@@ -176,83 +179,108 @@ ${Object.entries(colors).map(([key, value]) => `  ${key.padEnd(15)}: ${value};`)
     </section>
 
     <section :class="['demo-preview', $style.controls]">
-      <div :class="$style.controlRow">
-        <label :class="$style.field">
-          <span :class="$style.fieldLabel">レイアウト</span>
-          <SelectBox
-            v-model="theme"
-            name="listTheme"
-            :options="THEME_OPTIONS"
-            canOmitSelect
-          />
-        </label>
-        <label :class="$style.field">
-          <span :class="$style.fieldLabel">カラム数（GridList のみ）</span>
-          <SelectBox
-            v-model="columnNumber"
-            name="columnNumber"
-            :options="COLUMN_OPTIONS"
-            canOmitSelect
-          />
-        </label>
-      </div>
+      <button
+        type="button"
+        :class="$style.controlsToggle"
+        :aria-expanded="isControlsOpen"
+        @click="isControlsOpen = !isControlsOpen"
+      >
+        <span>表示オプション</span>
+        <span :class="[$style.toggleArrow, { [$style.opened]: isControlsOpen }]">▾</span>
+      </button>
 
-      <div :class="$style.controlRow">
-        <LabeledCheckbox
-          v-model="isEnabledPickUp"
-          name="pickup"
-          label="ピックアップ表示"
-        />
-        <LabeledCheckbox
-          v-model="useAuthor"
-          name="author"
-          label="著者"
-        />
-        <LabeledCheckbox
-          v-model="useCategory"
-          name="category"
-          label="カテゴリ"
-        />
-        <LabeledCheckbox
-          v-model="useTag"
-          name="tag"
-          label="タグ"
-        />
-        <LabeledCheckbox
-          v-model="hasImage"
-          name="image"
-          label="アイキャッチあり"
-        />
-      </div>
+      <div :class="[$style.controlsBody, { [$style.opened]: isControlsOpen }]">
+        <div :class="$style.controlsInner">
+          <div :class="$style.controlRow">
+            <label :class="$style.field">
+              <span :class="$style.fieldLabel">レイアウト</span>
+              <SelectBox
+                v-model="theme"
+                name="listTheme"
+                :options="THEME_OPTIONS"
+                canOmitSelect
+              />
+            </label>
+            <label :class="$style.field">
+              <span :class="$style.fieldLabel">カラム数（GridList のみ）</span>
+              <SelectBox
+                v-model="columnNumber"
+                name="columnNumber"
+                :options="COLUMN_OPTIONS"
+                canOmitSelect
+              />
+            </label>
+          </div>
 
-      <div :class="$style.controlRow">
-        <div
-          v-for="(value, key) in colors"
-          :key="key"
-          :class="$style.colorField"
-        >
-          <input
-            v-model="colors[key]"
-            type="color"
-            :class="$style.colorInput"
-          >
-          <span :class="$style.fieldLabel">{{ COLOR_LABELS[key] }}</span>
+          <div :class="$style.controlRow">
+            <LabeledCheckbox
+              v-model="isEnabledPickUp"
+              name="pickup"
+              label="ピックアップ表示"
+            />
+            <LabeledCheckbox
+              v-model="useAuthor"
+              name="author"
+              label="著者"
+            />
+            <LabeledCheckbox
+              v-model="useCategory"
+              name="category"
+              label="カテゴリ"
+            />
+            <LabeledCheckbox
+              v-model="useTag"
+              name="tag"
+              label="タグ"
+            />
+            <LabeledCheckbox
+              v-model="hasImage"
+              name="image"
+              label="アイキャッチあり"
+            />
+          </div>
+
+          <div :class="$style.controlRow">
+            <div
+              v-for="(value, key) in colors"
+              :key="key"
+              :class="$style.colorField"
+            >
+              <input
+                v-model="colors[key]"
+                type="color"
+                :class="$style.colorInput"
+              >
+              <span :class="$style.fieldLabel">{{ COLOR_LABELS[key] }}</span>
+            </div>
+            <button
+              type="button"
+              :class="$style.reset"
+              @click="resetColors"
+            >
+              配色をリセット
+            </button>
+          </div>
         </div>
-        <button
-          type="button"
-          :class="$style.reset"
-          @click="resetColors"
-        >
-          配色をリセット
-        </button>
       </div>
     </section>
 
     <section :class="$style.previewBlock">
       <header :class="$style.previewHeader">
-        <h3 :class="$style.previewTitle">
-          {{ currentList.name }}
-        </h3>
+        <div :class="$style.previewHeadline">
+          <h3 :class="$style.previewTitle">
+            {{ currentList.name }}
+          </h3>
+          <a
+            :class="$style.sourceLink"
+            :href="sourceUrl(listSource(currentList.name.replace('List', '')))"
+            target="_blank"
+            rel="noopener"
+          >
+            <GithubIcon :class="$style.sourceIcon" />
+            {{ currentList.name }} のソース
+          </a>
+        </div>
         <p :class="$style.previewDescription">
           {{ currentList.description }}
         </p>
@@ -334,6 +362,82 @@ ${Object.entries(colors).map(([key, value]) => `  ${key.padEnd(15)}: ${value};`)
   border-radius   : var(--radius-size);
   background-color: color-mix(in srgb, var(--base-color) 92%, transparent);
   backdrop-filter : blur(8px);
+}
+
+.controlsToggle {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : var(--sp-small);
+  inline-size    : 100%;
+  padding        : 0;
+  border         : none;
+  background-color: transparent;
+  color          : var(--gray);
+  font-family    : inherit;
+  font-size      : var(--fs-min);
+  letter-spacing : var(--letter-spacing-normal);
+  cursor         : pointer;
+
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+.toggleArrow {
+  transition: rotate var(--transition-duration) ease-out;
+
+  &.opened {
+    rotate: 180deg;
+  }
+}
+
+.controlsBody {
+  display              : grid;
+  grid-template-rows   : 0fr;
+  transition           : grid-template-rows var(--transition-duration) ease-out;
+
+  &.opened {
+    grid-template-rows: 1fr;
+  }
+}
+
+.controlsInner {
+  display       : flex;
+  flex-direction: column;
+  gap           : var(--sp-medium);
+  overflow      : hidden;
+  min-height    : 0;
+}
+
+.previewHeadline {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  flex-wrap      : wrap;
+  gap            : var(--sp-small);
+}
+
+.sourceLink {
+  display      : inline-flex;
+  align-items  : center;
+  gap          : .3rem;
+  padding      : .15rem .6rem;
+  border       : 1px solid var(--border-color);
+  border-radius: 999px;
+  color        : var(--gray);
+  font-size    : var(--fs-min);
+
+  &:hover {
+    border-color: var(--primary-color);
+    color       : var(--primary-color);
+  }
+}
+
+.sourceIcon {
+  inline-size: .8rem;
+  block-size : .8rem;
+  fill       : currentColor;
 }
 
 .controlRow {

@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import CodeBlock from '~demo/components/CodeBlock.vue'
+import GithubIcon from '~demo/components/GithubIcon.vue'
+import { sourceUrl } from '~demo/data/repository'
+
+type Source = {
+  label: string
+  path: string
+}
 
 withDefaults(defineProps<{
   id?: string
@@ -8,11 +15,14 @@ withDefaults(defineProps<{
   description?: string
   code?: string
   contained?: boolean
+  /** GitHub 上のソースへのリンク */
+  sources?: Source[]
 }>(), {
   id         : undefined,
   description: '',
   code       : '',
   contained  : false,
+  sources    : () => [],
 })
 
 const isCodeOpen = ref(false)
@@ -24,9 +34,30 @@ const isCodeOpen = ref(false)
     :class="$style.section"
   >
     <header :class="$style.header">
-      <h3 :class="$style.title">
-        {{ title }}
-      </h3>
+      <div :class="$style.headline">
+        <h3 :class="$style.title">
+          {{ title }}
+        </h3>
+        <ul
+          v-if="sources.length"
+          :class="$style.sources"
+        >
+          <li
+            v-for="source in sources"
+            :key="source.path"
+          >
+            <a
+              :class="$style.sourceLink"
+              :href="sourceUrl(source.path)"
+              target="_blank"
+              rel="noopener"
+            >
+              <GithubIcon :class="$style.sourceIcon" />
+              {{ source.label }}
+            </a>
+          </li>
+        </ul>
+      </div>
       <p
         v-if="description"
         :class="$style.description"
@@ -71,6 +102,43 @@ const isCodeOpen = ref(false)
   display       : flex;
   flex-direction: column;
   gap           : .25rem;
+}
+
+.headline {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  flex-wrap      : wrap;
+  gap            : var(--sp-small) var(--sp-medium);
+}
+
+.sources {
+  display    : flex;
+  align-items: center;
+  flex-wrap  : wrap;
+  gap        : var(--sp-small);
+}
+
+.sourceLink {
+  display      : inline-flex;
+  align-items  : center;
+  gap          : .3rem;
+  padding      : .15rem .6rem;
+  border       : 1px solid var(--border-color);
+  border-radius: 999px;
+  color        : var(--gray);
+  font-size    : var(--fs-min);
+
+  &:hover {
+    border-color: var(--primary-color);
+    color       : var(--primary-color);
+  }
+}
+
+.sourceIcon {
+  inline-size: .8rem;
+  block-size : .8rem;
+  fill       : currentColor;
 }
 
 .title {

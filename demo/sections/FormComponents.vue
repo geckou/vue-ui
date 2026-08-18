@@ -24,6 +24,7 @@ import DateRangePicker from '@/components/DateRangePicker.vue'
 import DateSelector from '@/components/DateSelector.vue'
 import TextButton from '@/components/TextButton.vue'
 import { FormValidationManager } from '@/scripts/form-validation-manager'
+import { componentSource } from '~demo/data/repository'
 
 const SELECT_BOX_OPTIONS = [
   { label: '未選択', value: '' },
@@ -206,6 +207,7 @@ const formState = () => JSON.stringify({
   <div :class="$style.page">
     <DemoSection
       id="textbox"
+      :sources="[{ label: 'TextBox', path: componentSource('TextBox') }]"
       title="TextBox"
       description="バリデーション（正規表現 + メッセージ）と必須指定に対応したテキスト入力。"
       :code="CODE.textBox"
@@ -223,6 +225,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="textarea"
+      :sources="[{ label: 'TextArea', path: componentSource('TextArea') }]"
       title="TextArea"
       description="autoAdjustHeight を付けると入力量に応じて高さが伸びる。"
       :code="CODE.textArea"
@@ -240,6 +243,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="selectbox"
+      :sources="[{ label: 'SelectBox', path: componentSource('SelectBox') }]"
       title="SelectBox"
       description="optgroup 形式（キーに group 名、値に Option 配列）もそのまま渡せる。"
       :code="CODE.selectBox"
@@ -257,6 +261,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="checkbox"
+      :sources="[{ label: 'CheckBox', path: componentSource('CheckBox') }, { label: 'LabeledCheckbox', path: componentSource('LabeledCheckbox') }, { label: 'CheckButton', path: componentSource('CheckButton') }]"
       title="CheckBox / LabeledCheckbox / CheckButton"
       description="単体のチェックボックス、ラベル付き、ボタン型の 3 種類。"
       :code="CODE.checkBox"
@@ -280,6 +285,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="checkboxes"
+      :sources="[{ label: 'CheckBoxes', path: componentSource('CheckBoxes') }]"
       title="CheckBoxes"
       description="Option 配列から複数選択。isDisabled 付きの選択肢も指定できる。"
       :code="CODE.checkBoxes"
@@ -293,6 +299,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="radiobuttons"
+      :sources="[{ label: 'RadioButtons', path: componentSource('RadioButtons') }]"
       title="RadioButtons"
       :code="CODE.radio"
     >
@@ -304,6 +311,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="togglebutton"
+      :sources="[{ label: 'ToggleButton', path: componentSource('ToggleButton') }]"
       title="ToggleButton"
       description="on / off それぞれのラベルを指定できる。"
       :code="CODE.toggle"
@@ -317,6 +325,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="basicbutton"
+      :sources="[{ label: 'BasicButton', path: componentSource('BasicButton') }]"
       title="BasicButton"
       description="isLoading でスピナー表示に切り替わる（クリックで 1.2 秒間ローディング）。"
       :code="CODE.button"
@@ -332,6 +341,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="labeledfieldset"
+      :sources="[{ label: 'LabeledFieldset', path: componentSource('LabeledFieldset') }]"
       title="LabeledFieldset"
       description="label スロットと入力欄をまとめて配置するためのラッパー。"
       :code="CODE.fieldset"
@@ -352,6 +362,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="tabui"
+      :sources="[{ label: 'TabUI', path: componentSource('TabUI') }]"
       title="TabUI"
       description="tabs の key に対応する #<key>Contents スロットに中身を書く。"
       :code="CODE.tab"
@@ -380,6 +391,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="slidedownui"
+      :sources="[{ label: 'SlideDownUi', path: componentSource('SlideDownUi') }]"
       title="SlideDownUi"
       description="アコーディオン。summary スロットが見出し、デフォルトスロットが中身。"
       :code="CODE.slideDown"
@@ -398,6 +410,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="dropdownui"
+      :sources="[{ label: 'DropdownUi', path: componentSource('DropdownUi') }]"
       title="DropdownUi"
       description="トリガーをクリックすると中身を表示する。contentAlignment で表示位置を調整。"
       :code="CODE.dropdown"
@@ -421,6 +434,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="modalbox"
+      :sources="[{ label: 'ModalBox', path: componentSource('ModalBox') }]"
       title="ModalBox"
       description="isShown で表示を制御し、closeModal イベントで閉じる。表示中は背面のスクロールをロック。"
       :code="CODE.modal"
@@ -457,6 +471,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="datepicker"
+      :sources="[{ label: 'DatePicker', path: componentSource('DatePicker') }]"
       title="DatePicker"
       description="ネイティブの日付入力と年 / 月 / 日の直接入力を併用。FormValidationManager に検証結果を通知する。"
       :code="CODE.datePicker"
@@ -476,6 +491,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="daterangepicker"
+      :sources="[{ label: 'DateRangePicker', path: componentSource('DateRangePicker') }]"
       title="DateRangePicker"
       description="開始日と終了日の組。互いの min / max が自動で連動する。"
       :code="CODE.dateRange"
@@ -492,6 +508,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="dateselector"
+      :sources="[{ label: 'DateSelector', path: componentSource('DateSelector') }]"
       title="DateSelector"
       description="年 / 月 / 日をプルダウンで選ぶ形式。生年月日など過去日の入力向け。"
       :code="CODE.dateSelector"
@@ -509,6 +526,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="textbutton"
+      :sources="[{ label: 'TextButton', path: componentSource('TextButton') }]"
       title="TextButton"
       description="枠のないテキストリンク調のボタン。variant を caution にすると警告色になる。"
       :code="CODE.textButton"
@@ -529,6 +547,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="misc"
+      :sources="[{ label: 'ErrorMessage', path: componentSource('ErrorMessage') }, { label: 'LoadingSpinner', path: componentSource('LoadingSpinner') }]"
       title="ErrorMessage / LoadingSpinner"
       :code="CODE.misc"
     >
