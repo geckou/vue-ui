@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const props = withDefaults(defineProps<{
-  avatarUrls?: any | null
+withDefaults(defineProps<{
+  avatarUrls?: Record<string, string> | null
   name?: string
   direction?: 'row' | 'row-reverse'
   thumbnail?: {
@@ -14,10 +14,10 @@ const props = withDefaults(defineProps<{
     preposition?: string
   }
 }>(), {
-  avatarUrls   : null,
-  name         : '',
-  direction    : 'row',
-  thumbnail: () => ({
+  avatarUrls: null,
+  name      : '',
+  direction : 'row',
+  thumbnail : () => ({
     size : 'medium',
     shape: 'square',
   }),
@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<{
     fontSize   : 'medium',
     fontWeight : 'normal',
     preposition: '',
-  })
+  }),
 })
 </script>
 

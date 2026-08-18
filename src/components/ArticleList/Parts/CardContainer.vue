@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{ path: string }>()
+defineProps<{ path: string }>()
 </script>
 
 <template>

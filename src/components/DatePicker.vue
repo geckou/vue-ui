@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { ref, reactive, watch } from 'vue'
 import { FormValidationManager } from '~/scripts/form-validation-manager'
 import ErrorMessage from '@/components/ErrorMessage.vue'

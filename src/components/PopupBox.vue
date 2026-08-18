@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { ref } from 'vue'
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   position?: {
     x: 'left' | 'right' | 'center'
     y: 'top' | 'bottom' | 'center'

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {
+  Article,
   Category,
   ListSettings,
 } from '@/types'
@@ -8,8 +9,8 @@ import { returnArticlePath, normalizePostConfig } from '@/scripts/utils'
 import GridCard from '@/components/ArticleList/Card/Grid.vue'
 
 const props = defineProps<{
-  articles: any[]
-  categories: any[]
+  articles: Article[]
+  categories: Category[]
   columnNumber: number
   settings: ListSettings
 }>()

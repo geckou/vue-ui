@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { ref, onMounted, onUpdated, watch } from 'vue'
 import IconChevronDown from '@/components/Icon/KeyboardArrowDownIcon.vue'
 const props = withDefaults(defineProps<{
@@ -22,7 +23,7 @@ const closeDropDown = () => {
 }
 
 const updateContentsHeight = () => {
-  const contentsValue: any = contents.value
+  const contentsValue = contents.value
   if (contentsValue) {
     contentsHeight.value = contentsValue.clientHeight
   }

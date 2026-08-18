@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import type {
+  Article,
+} from '@/types'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import MetadataList from '@/components/ArticleList/Parts/MetadataList.vue'
 import { returnTagList } from '@/scripts/utils'
 
 const props = defineProps<{
-  article: any
+  article: Article
   icon?: {
     color?: string
     size?: 'small' | 'medium'

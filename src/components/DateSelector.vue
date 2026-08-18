@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { ref, computed, watch, watchEffect } from 'vue'
 import { FormValidationManager } from '~/scripts/form-validation-manager'
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: string): void }>()

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUpdated } from 'vue'
 import IconChevronDown from '@/components/Icon/KeyboardArrowDownIcon.vue'
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   isHiddenArrow?: boolean,
   contentAlignment?: 'left' | 'center' | 'right',
   isDisabled?: boolean
@@ -20,7 +20,7 @@ const toggleBox = () => isContentsOpened.value = !isContentsOpened.value
 const closeDropDown = () => isContentsOpened.value = false
 
 const updateContentsHeight = () => {
-  const contentsValue: any = contents.value
+  const contentsValue = contents.value
   if (contentsValue) {
     contentsHeight.value = contentsValue.clientHeight
   }

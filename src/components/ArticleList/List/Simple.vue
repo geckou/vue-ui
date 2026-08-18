@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type {
+  Article,
   Category,
   ListSettings,
 } from '@/types'
 import GenericArticleList from '@/components/ArticleList/GenericArticleList.vue'
 
-const props = defineProps<{
-  articles: any[]
+defineProps<{
+  articles: Article[]
   categories: Category[]
   settings: ListSettings
 }>()

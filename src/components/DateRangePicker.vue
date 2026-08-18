@@ -1,24 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-type Emits = {
-  (e: string, newValue: string | number): void
-}
-
 type Props = {
   isDisabled? : boolean,
 }
 
-const emit = defineEmits<Emits>()
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   isDisabled: false,
 })
 
 const startDate = ref('')
 const endDate = ref('')
-
-const updateValue = ((e: any) => {
-  emit('update:modelValue', e.target.value)
-})
 </script>
 
 <template>

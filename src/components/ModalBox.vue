@@ -7,7 +7,7 @@ const props = defineProps<{
   size?: 'small' | 'medium' | 'large',
 }>()
 
-const emit = defineEmits<{ (e: 'closeModal', state: Boolean): void }>()
+const emit = defineEmits<{ (e: 'closeModal', state: boolean): void }>()
 const bodyElement = document.querySelector('body') as HTMLElement
 let previousOverflow = ''
 

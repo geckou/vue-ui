@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import type {
+  Article,
   Category,
   ListSettings,
 } from '@/types'
@@ -18,7 +19,7 @@ import EntertainmentCard from '@/components/ArticleList/Card/Entertainment.vue'
 import GalleryCard from '@/components/ArticleList/Card/Gallery.vue'
 
 const props = defineProps<{
-  articles: any[]
+  articles: Article[]
   theme: keyof typeof LIST_THEME
   categories: Category[]
   columnNumber: number

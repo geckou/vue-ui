@@ -85,3 +85,47 @@ export type ListSettings = {
   postConfig: PostConfig
   isEnabledPickUp: boolean
 }
+
+/** WordPress REST API のレンダリング済みフィールド */
+export type RenderedField = {
+  rendered: string
+}
+
+/** _embedded['wp:term'] の要素 */
+export type WpTerm = {
+  id: string | number
+  name: string
+  taxonomy?: string
+}
+
+/** _embedded['author'] の要素 */
+export type WpAuthor = {
+  name: string
+  avatar_urls?: Record<string, string>
+}
+
+/** _embedded['wp:featuredmedia'] の要素 */
+export type WpMedia = {
+  alt_text?: string
+  media_details?: {
+    sizes?: Record<string, { source_url?: string }>
+  }
+}
+
+/**
+ * WordPress REST API（?_embed 付き）の投稿。
+ * 実際のレスポンスは環境ごとにフィールドが増減するため、既知のフィールドのみ定義する
+ */
+export type Article = {
+  id: string | number
+  date: string
+  title: RenderedField
+  excerpt: RenderedField
+  categories?: string[]
+  _embedded?: {
+    author?: WpAuthor[]
+    'wp:featuredmedia'?: WpMedia[]
+    'wp:term'?: WpTerm[][]
+  }
+  [key: string]: unknown
+}

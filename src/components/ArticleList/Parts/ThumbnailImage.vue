@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import type {
+  Article,
+} from '@/types'
 import { computed } from 'vue'
 import NoImage from '@/components/ArticleList/Parts/NoImage.vue'
 
 const props = withDefaults(defineProps<{
-  article: any
+  article: Article
   aspectRatio?: {
     desktop?: string
     tablet?: string
@@ -12,9 +15,9 @@ const props = withDefaults(defineProps<{
 }>(), {
   aspectRatio: () => ({
     desktop: '4/3',
-    tablet: '4/3',
-    mobile: '4/3',
-  })
+    tablet : '4/3',
+    mobile : '4/3',
+  }),
 })
 
 const thumbnailSrcset = computed(() => `${returnThumbnailSrc('full')} 1024w, ${returnThumbnailSrc('thumbnail')} 640w`)
@@ -38,7 +41,7 @@ const returnThumbnailSrc = (type: 'full' | 'thumbnail') => articleMedia.value.me
       :alt="articleMedia?.alt_text ?? '記事サムネイル'"
       loading="lazy"
       :class="$style.image"
-    />
+    >
     <NoImage v-else />
   </div>
 </template>

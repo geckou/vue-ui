@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import type {
+  Category,
+} from '@/types'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import MetadataList from '@/components/ArticleList/Parts/MetadataList.vue'
 
 const props = defineProps<{
   categoryIds: string[]
-  categoryData: any[]
+  categoryData: Category[]
   icon?: {
     color?: string
     size?: 'small' | 'medium'
@@ -20,7 +23,7 @@ const props = defineProps<{
   delimiter?: string
 }>()
 
-const returnCatNameFromCatId = (categories: any[], categoryId: string) => categories.length ? categories.find(category => category.id === categoryId)?.name ?? '' : ''
+const returnCatNameFromCatId = (categories: Category[], categoryId: string) => categories.length ? categories.find(category => category.id === categoryId)?.name ?? '' : ''
 const categories: ComputedRef<string[]> = computed(() => props.categoryIds.map((id: string) => returnCatNameFromCatId(props.categoryData, id)))
 </script>
 

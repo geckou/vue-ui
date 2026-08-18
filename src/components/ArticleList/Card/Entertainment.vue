@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import type {
+  Article,
+  Category,
+  PostConfig,
+} from '@/types'
 import CardContainer from '@/components/ArticleList/Parts/CardContainer.vue'
 import ThumbnailImage from '@/components/ArticleList/Parts/ThumbnailImage.vue'
 import AuthorInfo from '@/components/ArticleList/Parts/AuthorInfo.vue'
@@ -8,12 +13,12 @@ import TagList from '@/components/ArticleList/Parts/TagList.vue'
 import PostedDate from '@/components/ArticleList/Parts/PostedDate.vue'
 import ExcerptText from '@/components/ArticleList/Parts/ExcerptText.vue'
 
-const props = defineProps<{
-  article: any
+defineProps<{
+  article: Article
   path: string
   isPickUpItem: boolean
-  postConfig: any
-  categories: any[]
+  postConfig: PostConfig
+  categories: Category[]
 }>()
 </script>
 
