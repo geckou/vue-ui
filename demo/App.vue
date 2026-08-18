@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import GeckouLogo from '~demo/components/GeckouLogo.vue'
 import GettingStarted from '~demo/sections/GettingStarted.vue'
 import FormComponents from '~demo/sections/FormComponents.vue'
 import ArticleLists from '~demo/sections/ArticleLists.vue'
@@ -113,7 +114,7 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
         :class="$style.brand"
         href="#/getting-started"
       >
-        <span :class="$style.brandMark">GK</span>
+        <GeckouLogo :class="$style.brandMark" />
         <span>
           <strong :class="$style.brandName">Geckou Vue UI</strong>
           <span :class="$style.brandSub">@geckou/vue-ui コンポーネントカタログ</span>
@@ -204,16 +205,13 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
 }
 
 .brandMark {
-  display         : grid;
-  place-items     : center;
-  width           : 2.25rem;
-  height          : 2.25rem;
-  border-radius   : 50%;
-  background-color: var(--gk-blue);
-  color           : #fff;
-  font-size       : var(--fs-smaller);
-  font-weight     : 700;
-  letter-spacing  : var(--letter-spacing-narrow);
+  color: var(--gk-blue);
+}
+
+@media (prefers-color-scheme: dark) {
+  .brandMark {
+    color: var(--gk-white);
+  }
 }
 
 .brandName {
