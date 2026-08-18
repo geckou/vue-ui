@@ -107,13 +107,6 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
     <StarField />
 
     <header :class="$style.header">
-      <button
-        type="button"
-        :class="$style.navToggle"
-        @click="isNavOpen = !isNavOpen"
-      >
-        メニュー
-      </button>
       <a
         :class="$style.brand"
         href="#/getting-started"
@@ -134,6 +127,28 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
           <GithubIcon :class="$style.githubIcon" />
           GitHub
         </a>
+        <button
+          type="button"
+          :class="$style.navToggle"
+          :aria-expanded="isNavOpen"
+          :aria-label="isNavOpen ? 'メニューを閉じる' : 'メニューを開く'"
+          @click="isNavOpen = !isNavOpen"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            :class="$style.navToggleIcon"
+            aria-hidden="true"
+          >
+            <path
+              v-if="isNavOpen"
+              d="M6.4 4.99 19.01 17.6l-1.41 1.41L4.99 6.4z M17.6 4.99 4.99 17.6l1.41 1.41L19.01 6.4z"
+            />
+            <path
+              v-else
+              d="M3 5h18v2H3zM3 11h18v2H3zM3 17h18v2H3z"
+            />
+          </svg>
+        </button>
       </nav>
     </header>
 
@@ -176,31 +191,6 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
       <main :class="$style.main">
         <component :is="currentDefinition.component" />
         <footer :class="$style.footer">
-          <p :class="$style.footerLinks">
-            <a
-              href="https://github.com/geckou/vue-ui"
-              target="_blank"
-              rel="noopener"
-            >
-              GitHub リポジトリ
-            </a>
-            <span aria-hidden="true">/</span>
-            <a
-              href="https://github.com/geckou/vue-ui/blob/main/README.md"
-              target="_blank"
-              rel="noopener"
-            >
-              README
-            </a>
-            <span aria-hidden="true">/</span>
-            <a
-              href="https://github.com/geckou/vue-ui/issues"
-              target="_blank"
-              rel="noopener"
-            >
-              Issues
-            </a>
-          </p>
           <p>© Geckou — MIT License</p>
         </footer>
       </main>
@@ -267,6 +257,9 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
 }
 
 .headerNav {
+  display       : flex;
+  align-items   : center;
+  gap           : var(--sp-small);
   margin-left   : auto;
   font-size     : var(--fs-small);
   letter-spacing: var(--letter-spacing-normal);
@@ -295,14 +288,27 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
 
 .navToggle {
   display         : none;
-  padding         : .35rem .7rem;
+  align-items     : center;
+  justify-content : center;
+  inline-size     : 2.25rem;
+  block-size      : 2.25rem;
+  padding         : 0;
   border          : 1px solid var(--border-color);
-  border-radius   : var(--radius-size);
+  border-radius   : 50%;
   background-color: transparent;
   color           : var(--text-color);
-  font-family     : inherit;
-  font-size       : var(--fs-smaller);
   cursor          : pointer;
+
+  &:hover {
+    border-color: var(--primary-color);
+    color       : var(--primary-color);
+  }
+}
+
+.navToggleIcon {
+  inline-size: 1.1rem;
+  block-size : 1.1rem;
+  fill       : currentColor;
 }
 
 .body {
@@ -390,15 +396,6 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   padding  : var(--sp-large) var(--sp-large) var(--sp-max);
 }
 
-.footerLinks {
-  display        : flex;
-  align-items    : center;
-  justify-content: center;
-  flex-wrap      : wrap;
-  gap            : var(--sp-small);
-  margin         : 0 0 var(--sp-small);
-}
-
 .footer {
   margin-top    : var(--sp-larger);
   color         : var(--gray);
@@ -408,29 +405,8 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
 }
 
 @media (max-width: 900px) {
-  .githubLink {
-  display        : inline-flex;
-  align-items    : center;
-  gap            : .4rem;
-  padding        : .3rem .8rem;
-  border         : 1px solid var(--border-color);
-  border-radius  : 999px;
-  color          : var(--text-color);
-
-  &:hover {
-    border-color: var(--primary-color);
-    color       : var(--primary-color);
-  }
-}
-
-.githubIcon {
-  inline-size: 1rem;
-  block-size : 1rem;
-  fill       : currentColor;
-}
-
-.navToggle {
-    display: block;
+  .navToggle {
+    display: inline-flex;
   }
 
   .sidebar {
