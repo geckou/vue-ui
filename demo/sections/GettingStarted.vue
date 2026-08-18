@@ -204,7 +204,6 @@ const CSS_VARS = `:root {
 
   &:hover {
     background-color: rgba(224, 224, 228, .12);
-    text-decoration : none;
   }
 }
 

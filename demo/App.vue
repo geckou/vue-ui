@@ -287,9 +287,8 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   color          : var(--text-color);
 
   &:hover {
-    border-color   : var(--primary-color);
-    color          : var(--primary-color);
-    text-decoration: none;
+    border-color: var(--primary-color);
+    color       : var(--primary-color);
   }
 }
 
@@ -424,9 +423,8 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   color          : var(--text-color);
 
   &:hover {
-    border-color   : var(--primary-color);
-    color          : var(--primary-color);
-    text-decoration: none;
+    border-color: var(--primary-color);
+    color       : var(--primary-color);
   }
 }
 
