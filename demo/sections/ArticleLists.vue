@@ -132,7 +132,7 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
 
     <section :class="$style.controls">
       <p :class="$style.controlsTitle">表示オプション</p>
-      <div :class="$style.controlsBody">
+      <div :class="['demo-preview', $style.controlsBody]">
         <LabeledCheckbox
           v-model="isEnabledPickUp"
           name="pickup"
