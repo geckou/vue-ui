@@ -58,9 +58,7 @@ const CSS_VARS = `:root {
         フォーム UI と記事一覧 UI を、ひとつのパッケージで
       </h2>
       <p :class="$style.lead">
-        Geckou のプロダクトで使い回している Vue 3 コンポーネント集です。
         入力フォーム系のコンポーネントと、WordPress REST API の記事データをそのまま渡せる記事一覧コンポーネント（10 レイアウト）を収録しています。
-        旧 <code>@geckou/vue-article-list</code> は本パッケージに統合されました。
       </p>
     </section>
 
