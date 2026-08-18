@@ -15,11 +15,11 @@ import GeckouVueUi from '@geckou/vue-ui'
 import App from './App.vue'
 
 createApp(App)
-  .use(GeckouVueUi) // GKTextBox / GKStandardList などがグローバル登録される
+  .use(GeckouVueUi) // TextBox / StandardList などがグローバル登録される
   .mount('#app')`
 
 const NAMED_USAGE = `<script setup lang="ts">
-import { GKTextBox, GKStandardList } from '@geckou/vue-ui'
+import { TextBox, StandardList } from '@geckou/vue-ui'
 <\/script>`
 
 const CSS_VARS = `:root {
@@ -88,15 +88,15 @@ const CSS_VARS = `:root {
         <article :class="$style.card">
           <h4 :class="$style.cardTitle">Form</h4>
           <p :class="$style.cardText">
-            GKTextBox / GKTextArea / GKSelectBox / GKCheckBox / GKCheckBoxes / GKLabeledCheckbox /
-            GKRadioButtons / GKToggleButton / GKBasicButton / GKLabeledFieldset / GKTabUI ほか
+            TextBox / TextArea / SelectBox / CheckBox / CheckBoxes / LabeledCheckbox /
+            RadioButtons / ToggleButton / BasicButton / LabeledFieldset / TabUI ほか
           </p>
         </article>
         <article :class="$style.card">
           <h4 :class="$style.cardTitle">Article List</h4>
           <p :class="$style.cardText">
-            GKStandardList / GKRoundedList / GKArtisticList / GKTileList / GKSimpleList /
-            GKRowList / GKNewsList / GKEntertainmentList / GKGalleryList / GKGridList
+            StandardList / RoundedList / ArtisticList / TileList / SimpleList /
+            RowList / NewsList / EntertainmentList / GalleryList / GridList
           </p>
         </article>
       </div>

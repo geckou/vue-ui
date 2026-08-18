@@ -26,16 +26,16 @@ type ListDefinition = {
 }
 
 const LISTS: ListDefinition[] = [
-  { key: 'standard', name: 'GKStandardList', component: StandardList, description: 'サムネイル・見出し・抜粋・メタ情報を揃えた標準レイアウト。3 カラム。' },
-  { key: 'rounded', name: 'GKRoundedList', component: RoundedList, description: '角丸のカードで柔らかい印象に。ブログや読み物向け。' },
-  { key: 'artistic', name: 'GKArtisticList', component: ArtisticList, description: '画像を大きく見せる構成。ビジュアル主体のメディア向け。' },
-  { key: 'tile', name: 'GKTileList', component: TileList, description: '画像の上にテキストを重ねるタイル型。' },
-  { key: 'simple', name: 'GKSimpleList', component: SimpleList, description: '装飾を抑えた最小構成。サイドバーや関連記事に。' },
-  { key: 'row', name: 'GKRowList', component: RowList, description: '横並びの 1 行レイアウト。検索結果や一覧ページ向け。' },
-  { key: 'news', name: 'GKNewsList', component: NewsList, description: '日付とカテゴリを前面に出したニュース向け。' },
-  { key: 'entertainment', name: 'GKEntertainmentList', component: EntertainmentList, description: '賑やかな見せ方。エンタメ・キャンペーン系に。' },
-  { key: 'gallery', name: 'GKGalleryList', component: GalleryList, description: '画像を敷き詰めるギャラリー表示。' },
-  { key: 'grid', name: 'GKGridList', component: GridList, description: 'カードごとに大きさと向きが変わるグリッド。columnNumber が必須。', needsColumnNumber: true },
+  { key: 'standard', name: 'StandardList', component: StandardList, description: 'サムネイル・見出し・抜粋・メタ情報を揃えた標準レイアウト。3 カラム。' },
+  { key: 'rounded', name: 'RoundedList', component: RoundedList, description: '角丸のカードで柔らかい印象に。ブログや読み物向け。' },
+  { key: 'artistic', name: 'ArtisticList', component: ArtisticList, description: '画像を大きく見せる構成。ビジュアル主体のメディア向け。' },
+  { key: 'tile', name: 'TileList', component: TileList, description: '画像の上にテキストを重ねるタイル型。' },
+  { key: 'simple', name: 'SimpleList', component: SimpleList, description: '装飾を抑えた最小構成。サイドバーや関連記事に。' },
+  { key: 'row', name: 'RowList', component: RowList, description: '横並びの 1 行レイアウト。検索結果や一覧ページ向け。' },
+  { key: 'news', name: 'NewsList', component: NewsList, description: '日付とカテゴリを前面に出したニュース向け。' },
+  { key: 'entertainment', name: 'EntertainmentList', component: EntertainmentList, description: '賑やかな見せ方。エンタメ・キャンペーン系に。' },
+  { key: 'gallery', name: 'GalleryList', component: GalleryList, description: '画像を敷き詰めるギャラリー表示。' },
+  { key: 'grid', name: 'GridList', component: GridList, description: 'カードごとに大きさと向きが変わるグリッド。columnNumber が必須。', needsColumnNumber: true },
 ]
 
 const isEnabledPickUp = ref(true)
@@ -68,7 +68,7 @@ const settings = computed<ListSettings>(() => ({
 const SETUP_CODE = `<script setup lang="ts">
 import type { Category, ListSettings } from '@geckou/vue-ui'
 import { ref, onMounted } from 'vue'
-import { GKStandardList } from '@geckou/vue-ui'
+import { StandardList } from '@geckou/vue-ui'
 
 const settings: ListSettings = {
   domainToUse: 'example.com',
@@ -97,7 +97,7 @@ onMounted(async () => {
 <\/script>
 
 <template>
-  <GKStandardList
+  <StandardList
     :articles="articles"
     :categories="categories"
     :settings="settings"
@@ -165,7 +165,7 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
             :options="COLUMN_OPTIONS"
             canOmitSelect
           />
-          <span :class="$style.selectNote">GKGridList のカラム数</span>
+          <span :class="$style.selectNote">GridList のカラム数</span>
         </div>
       </div>
     </section>

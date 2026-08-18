@@ -65,20 +65,20 @@ const submit = () => {
 }
 
 const CODE = {
-  textBox: `<GKTextBox
+  textBox: `<TextBox
   v-model="text"
   name="textbox"
   placeholder="半角英字で入力"
   :validates="[{ regex: /^[a-zA-Z_]+$/, message: '半角英字で入力してください' }]"
   isRequired
 />`,
-  textArea: `<GKTextArea
+  textArea: `<TextArea
   v-model="textarea"
   name="textarea"
   :rows="3"
   autoAdjustHeight
 />`,
-  selectBox: `<GKSelectBox
+  selectBox: `<SelectBox
   v-model="select"
   name="selectBox"
   :options="[
@@ -88,10 +88,10 @@ const CODE = {
   ]"
   isRequired
 />`,
-  checkBox: `<GKCheckBox v-model="check" name="checkbox" />
-<GKLabeledCheckbox v-model="check" name="labeled" label="規約に同意する" />
-<GKCheckButton v-model="checkButton" name="checkButton" />`,
-  checkBoxes: `<GKCheckBoxes
+  checkBox: `<CheckBox v-model="check" name="checkbox" />
+<LabeledCheckbox v-model="check" name="labeled" label="規約に同意する" />
+<CheckButton v-model="checkButton" name="checkButton" />`,
+  checkBoxes: `<CheckBoxes
   v-model="checks"
   name="checkboxes"
   :options="[
@@ -100,30 +100,30 @@ const CODE = {
     { label: '受け取らない', value: 'none', isDisabled: true },
   ]"
 />`,
-  radio: `<GKRadioButtons
+  radio: `<RadioButtons
   v-model="radios"
   :options="[
     { label: '個人', value: 'personal' },
     { label: '法人', value: 'corporate' },
   ]"
 />`,
-  toggle: `<GKToggleButton
+  toggle: `<ToggleButton
   v-model="toggle"
   name="toggleButton"
   :label="{ on: '公開', off: '非公開' }"
 />`,
-  button: `<GKBasicButton
+  button: `<BasicButton
   buttonType="submit"
   :isLoading="isLoading"
   @click="submit"
 >
   送信
-</GKBasicButton>`,
-  fieldset: `<GKLabeledFieldset>
+</BasicButton>`,
+  fieldset: `<LabeledFieldset>
   <template #label>お問い合わせ内容</template>
-  <GKTextArea v-model="textarea" name="textarea" />
-</GKLabeledFieldset>`,
-  tab: `<GKTabUI
+  <TextArea v-model="textarea" name="textarea" />
+</LabeledFieldset>`,
+  tab: `<TabUI
   :tabs="[
     { key: 'tabA', label: '入力値' },
     { key: 'tabB', label: 'JSON' },
@@ -132,27 +132,27 @@ const CODE = {
 >
   <template #tabAContents>...</template>
   <template #tabBContents>...</template>
-</GKTabUI>`,
-  slideDown: `<GKSlideDownUi>
+</TabUI>`,
+  slideDown: `<SlideDownUi>
   <template #trigger>配送について</template>
   <p>ご注文から 3 営業日以内に発送します。</p>
-</GKSlideDownUi>`,
-  dropdown: `<GKDropdownUi contentAlignment="left" contentsWidth="16rem">
+</SlideDownUi>`,
+  dropdown: `<DropdownUi contentAlignment="left" contentsWidth="16rem">
   <template #trigger>メニュー</template>
   <template #contents>
     <ul><li>プロフィール</li><li>設定</li></ul>
   </template>
-</GKDropdownUi>`,
-  modal: `<GKModalBox
+</DropdownUi>`,
+  modal: `<ModalBox
   :isShown="isModalShown"
   size="small"
   @closeModal="isModalShown = false"
 >
   <template #header><h4>確認</h4></template>
   <p>この内容で送信します。</p>
-</GKModalBox>`,
-  misc: `<GKErrorMessage :errorMessages="['必須項目です']" />
-<GKLoadingSpinner />`,
+</ModalBox>`,
+  misc: `<ErrorMessage :errorMessages="['必須項目です']" />
+<LoadingSpinner />`,
 }
 
 const formState = () => JSON.stringify({
@@ -171,7 +171,7 @@ const formState = () => JSON.stringify({
   <div :class="$style.page">
     <DemoSection
       id="textbox"
-      title="GKTextBox"
+      title="TextBox"
       description="バリデーション（正規表現 + メッセージ）と必須指定に対応したテキスト入力。"
       :code="CODE.textBox"
     >
@@ -188,7 +188,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="textarea"
-      title="GKTextArea"
+      title="TextArea"
       description="autoAdjustHeight を付けると入力量に応じて高さが伸びる。"
       :code="CODE.textArea"
     >
@@ -205,7 +205,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="selectbox"
-      title="GKSelectBox"
+      title="SelectBox"
       description="optgroup 形式（キーに group 名、値に Option 配列）もそのまま渡せる。"
       :code="CODE.selectBox"
     >
@@ -222,7 +222,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="checkbox"
-      title="GKCheckBox / GKLabeledCheckbox / GKCheckButton"
+      title="CheckBox / LabeledCheckbox / CheckButton"
       description="単体のチェックボックス、ラベル付き、ボタン型の 3 種類。"
       :code="CODE.checkBox"
     >
@@ -245,7 +245,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="checkboxes"
-      title="GKCheckBoxes"
+      title="CheckBoxes"
       description="Option 配列から複数選択。isDisabled 付きの選択肢も指定できる。"
       :code="CODE.checkBoxes"
     >
@@ -258,7 +258,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="radiobuttons"
-      title="GKRadioButtons"
+      title="RadioButtons"
       :code="CODE.radio"
     >
       <RadioButtons
@@ -269,7 +269,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="togglebutton"
-      title="GKToggleButton"
+      title="ToggleButton"
       description="on / off それぞれのラベルを指定できる。"
       :code="CODE.toggle"
     >
@@ -282,7 +282,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="basicbutton"
-      title="GKBasicButton"
+      title="BasicButton"
       description="isLoading でスピナー表示に切り替わる（クリックで 1.2 秒間ローディング）。"
       :code="CODE.button"
     >
@@ -297,7 +297,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="labeledfieldset"
-      title="GKLabeledFieldset"
+      title="LabeledFieldset"
       description="label スロットと入力欄をまとめて配置するためのラッパー。"
       :code="CODE.fieldset"
     >
@@ -317,7 +317,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="tabui"
-      title="GKTabUI"
+      title="TabUI"
       description="tabs の key に対応する #<key>Contents スロットに中身を書く。"
       :code="CODE.tab"
     >
@@ -345,7 +345,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="slidedownui"
-      title="GKSlideDownUi"
+      title="SlideDownUi"
       description="アコーディオン。summary スロットが見出し、デフォルトスロットが中身。"
       :code="CODE.slideDown"
     >
@@ -363,7 +363,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="dropdownui"
-      title="GKDropdownUi"
+      title="DropdownUi"
       description="トリガーをクリックすると中身を表示する。contentAlignment で表示位置を調整。"
       :code="CODE.dropdown"
     >
@@ -386,7 +386,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="modalbox"
-      title="GKModalBox"
+      title="ModalBox"
       description="isShown で表示を制御し、closeModal イベントで閉じる。表示中は背面のスクロールをロック。"
       :code="CODE.modal"
     >
@@ -418,7 +418,7 @@ const formState = () => JSON.stringify({
 
     <DemoSection
       id="misc"
-      title="GKErrorMessage / GKLoadingSpinner"
+      title="ErrorMessage / LoadingSpinner"
       :code="CODE.misc"
     >
       <div :class="$style.row">

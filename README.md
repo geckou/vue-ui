@@ -4,6 +4,9 @@ Vue 3 用の再利用可能な UI コンポーネント集。フォーム系コ�
 
 **デモサイト: https://geckou.github.io/vue-ui/**
 
+> **v0.1.0 の破壊的変更**: コンポーネント名から `GK` プレフィックスを廃止しました（`GKTextBox` → `TextBox`）。
+> v0.0.x から更新する場合はインポート名とテンプレート内のタグ名を置き換えてください。
+
 ## Installation
 
 `.npmrc`
@@ -31,31 +34,31 @@ createApp(App).use(GeckouVueUi).mount('#app')
 
 ```ts
 // 個別インポート
-import { GKTextBox, GKStandardList } from '@geckou/vue-ui'
+import { TextBox, StandardList } from '@geckou/vue-ui'
 ```
 
 ## Components
 
 ### Form
 
-`GKTextBox` / `GKTextArea` / `GKSelectBox` / `GKCheckBox` / `GKCheckBoxes` / `GKCheckButton` /
-`GKLabeledCheckbox` / `GKLabeledFieldset` / `GKRadioButtons` / `GKToggleButton` / `GKBasicButton` /
-`GKInputBox` / `GKInputGroup` / `GKTabUI` / `GKSlideDownUi` / `GKDropdownUi` / `GKModalBox` /
-`GKPopupBox` / `GKLoadingSpinner` / `GKErrorMessage`
+`TextBox` / `TextArea` / `SelectBox` / `CheckBox` / `CheckBoxes` / `CheckButton` /
+`LabeledCheckbox` / `LabeledFieldset` / `RadioButtons` / `ToggleButton` / `BasicButton` /
+`InputBox` / `InputGroup` / `TabUI` / `SlideDownUi` / `DropdownUi` / `ModalBox` /
+`PopupBox` / `LoadingSpinner` / `ErrorMessage`
 
 > `DatePicker` / `DateRangePicker` / `DateSelector` は Nuxt アプリ側の `FormValidationManager` に依存しているため、`src` には残していますが公開エクスポートには含めていません。
 
 ### Article List
 
-`GKStandardList` / `GKRoundedList` / `GKArtisticList` / `GKTileList` / `GKSimpleList` /
-`GKRowList` / `GKNewsList` / `GKEntertainmentList` / `GKGalleryList` / `GKGridList`
+`StandardList` / `RoundedList` / `ArtisticList` / `TileList` / `SimpleList` /
+`RowList` / `NewsList` / `EntertainmentList` / `GalleryList` / `GridList`
 
 WordPress REST API（`?_embed` 付き）のレスポンス配列をそのまま渡せます。
 
 ```vue
 <script setup lang="ts">
 import type { Category, ListSettings } from '@geckou/vue-ui'
-import { GKStandardList } from '@geckou/vue-ui'
+import { StandardList } from '@geckou/vue-ui'
 
 const settings: ListSettings = {
   domainToUse: 'example.com',
@@ -74,7 +77,7 @@ const articles = ref<any[]>([])
 </script>
 
 <template>
-  <GKStandardList
+  <StandardList
     :articles="articles"
     :categories="categories"
     :settings="settings"
@@ -87,7 +90,7 @@ const articles = ref<any[]>([])
 | `articles` | `any[]` | ✅ | WordPress REST API のレスポンス配列 |
 | `categories` | `Category[]` | ✅ | カテゴリ ID と表示名の対応 |
 | `settings` | `ListSettings` | ✅ | 記事リンクの組み立て設定と表示オプション |
-| `columnNumber` | `number` | `GKGridList` のみ ✅ | グリッドのカラム数 |
+| `columnNumber` | `number` | `GridList` のみ ✅ | グリッドのカラム数 |
 
 ## Development
 
@@ -209,7 +212,7 @@ yarn build:demo   # デモサイトを demo-dist に出力
 | `isEnabledPickUp` | `boolean`    | ✅       | 先頭の記事を大きく表示するか               |
 
 ## Component Props (Form)
-### `GKTextBox`
+### `TextBox`
 
 | Prop Name          | Type                        | Required | Default            | Description                                    |
 |--------------------|-----------------------------|----------|--------------------|------------------------------------------------|
