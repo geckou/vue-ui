@@ -294,7 +294,7 @@ onUnmounted(() => window.removeEventListener('hashchange', applyHash))
   block-size      : 2.25rem;
   padding         : 0;
   border          : 1px solid var(--border-color);
-  border-radius   : var(--radius-size);
+  border-radius   : 50%;
   background-color: transparent;
   color           : var(--text-color);
   cursor          : pointer;
