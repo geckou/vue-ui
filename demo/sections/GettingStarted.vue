@@ -60,6 +60,14 @@ const CSS_VARS = `:root {
       <p :class="$style.lead">
         入力フォーム系のコンポーネントと、WordPress REST API の記事データをそのまま渡せる記事一覧コンポーネント（10 レイアウト）を収録しています。
       </p>
+      <a
+        :class="$style.heroLink"
+        href="https://github.com/geckou/vue-ui"
+        target="_blank"
+        rel="noopener"
+      >
+        github.com/geckou/vue-ui
+      </a>
     </section>
 
     <section :class="$style.block">
@@ -145,6 +153,9 @@ const CSS_VARS = `:root {
 }
 
 .hero {
+  display       : flex;
+  flex-direction: column;
+  align-items   : flex-start;
   padding      : var(--sp-max) var(--sp-large);
   border       : 1px solid var(--border-color);
   border-radius: var(--radius-size);
@@ -178,6 +189,22 @@ const CSS_VARS = `:root {
     padding         : .1em .4em;
     border-radius   : 4px;
     background-color: rgba(255, 255, 255, .18);
+  }
+}
+
+.heroLink {
+  align-self     : flex-start;
+  margin-block-start: var(--sp-large);
+  padding        : .4rem 1rem;
+  border         : 1px solid rgba(224, 224, 228, .4);
+  border-radius  : 999px;
+  color          : #e0e0e4;
+  font-size      : var(--fs-smaller);
+  letter-spacing : var(--letter-spacing-narrow);
+
+  &:hover {
+    background-color: rgba(224, 224, 228, .12);
+    text-decoration : none;
   }
 }
 
