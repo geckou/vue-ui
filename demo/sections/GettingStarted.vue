@@ -2,14 +2,9 @@
 /* eslint-disable no-useless-escape -- テンプレートリテラル内の閉じスクリプトタグを打ち消すためのエスケープ */
 import CodeBlock from '~demo/components/CodeBlock.vue'
 
-const NPMRC = `@geckou:registry=https://npm.pkg.github.com/
-//npm.pkg.github.com/:_authToken=\${GITHUB_TOKEN}`
-
-const INSTALL = `# GitHub Packages 経由
-yarn add @geckou/vue-ui
-
-# もしくはリポジトリ直指定
-yarn add https://github.com/geckou/vue-ui.git`
+const INSTALL = `yarn add @geckou/vue-ui
+# もしくは
+npm install @geckou/vue-ui`
 
 const PLUGIN_USAGE = `import { createApp } from 'vue'
 import GeckouVueUi from '@geckou/vue-ui'
@@ -75,12 +70,8 @@ const CSS_VARS = `:root {
         インストール
       </h3>
       <p :class="$style.text">
-        GitHub Packages で配布しています。プロジェクトルートの <code>.npmrc</code> にレジストリを設定してください。
+        npm で配布しています。Vue 3 が peerDependency です。
       </p>
-      <CodeBlock
-        :code="NPMRC"
-        language="npmrc"
-      />
       <CodeBlock
         :code="INSTALL"
         language="bash"

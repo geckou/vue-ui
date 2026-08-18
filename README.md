@@ -4,19 +4,21 @@ Vue 3 用の再利用可能な UI コンポーネント集。入力フォーム�
 
 **デモサイト: https://ui.geckou.net/**
 
+## このパッケージについて
+
+Geckou が自社の制作案件で使うために開発しているコンポーネント集です。どなたでも自由に使えますが、次の点をご理解のうえでご利用ください。
+
+- バグ報告・要望は歓迎しますが、**対応や後方互換は保証しません**
+- 自社案件の都合で API や見た目が変わることがあります。バージョンは当面 `0.x` のままです
+- Pull Request は歓迎しますが、方針に合わない場合はマージしないことがあります。手早く直したいときは fork してお使いください
+- MIT License（"AS IS"）で提供しています
+
 ## Installation
-
-`.npmrc`
-
-```
-@geckou:registry=https://npm.pkg.github.com/
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
-```
 
 ```bash
 yarn add @geckou/vue-ui
 # もしくは
-yarn add https://github.com/geckou/vue-ui.git
+npm install @geckou/vue-ui
 ```
 
 ## Usage
@@ -198,6 +200,14 @@ yarn build:demo   # デモサイトを demo-dist に出力
 
 デモサイトは `main` への push で GitHub Pages に自動デプロイされます（`.github/workflows/deploy-demo.yml`）。
 
+パッケージは `v*` のタグを push すると npm に publish されます（`.github/workflows/publish.yml`）。
+
+```bash
+yarn version --new-version 0.2.2   # package.json の更新とタグ作成
+git push origin main --tags
+```
+
+
 ## Types
 
 ### `BorderStyle`
@@ -320,3 +330,7 @@ yarn build:demo   # デモサイトを demo-dist に出力
 | `maxLength`        | `number`                    | ❌       | `30`               | 最大入力文字数                                 |
 | `autocomplete`     | `string`                    | ❌       | `off`              | `autocomplete`属性                             |
 | `validates`        | `Validates[]`               | ❌       | `[]`               | バリデーションの設定                           |
+
+## License
+
+[MIT](LICENSE)

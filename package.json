@@ -17,10 +17,12 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
@@ -51,5 +53,17 @@
   "dependencies": {
     "date-fns": "^4.4.0"
   },
-  "homepage": "https://ui.geckou.net/"
+  "homepage": "https://ui.geckou.net/",
+  "keywords": [
+    "vue",
+    "vue3",
+    "ui",
+    "components",
+    "form",
+    "article-list",
+    "wordpress"
+  ],
+  "bugs": {
+    "url": "https://github.com/geckou/vue-ui/issues"
+  }
 }
