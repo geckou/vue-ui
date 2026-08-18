@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, onMounted, onUpdated, watch } from 'vue'
+import IconChevronDown from '@/components/Icon/KeyboardArrowDownIcon.vue'
 const props = withDefaults(defineProps<{
   isOpened?: boolean | null
   isHiddenArrow?: boolean
@@ -69,6 +71,8 @@ defineExpose({ isOpenedContents })
 </template>
 
 <style lang="scss" module>
+@use '@/assets/scss/mixin' as *;
+
 @keyframes overflow {
   0% {
     overflow: hidden;

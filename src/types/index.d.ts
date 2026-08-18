@@ -58,3 +58,30 @@ type Validate = {
 }
 
 export type Validates = Validate[]
+// ---------------------------------------------
+// ArticleList
+// ---------------------------------------------
+export type Category = {
+  id: string
+  name: string
+}
+
+export type PostConfig = {
+  article_page_path: string
+  query_key_name: string
+  useAuthor?: boolean
+  useCategory?: boolean
+  useTag?: boolean
+  /** useAuthor のエイリアス（カード内部で参照される） */
+  author?: boolean
+  /** useCategory のエイリアス（カード内部で参照される） */
+  category?: boolean
+  /** useTag のエイリアス（カード内部で参照される） */
+  tag?: boolean
+}
+
+export type ListSettings = {
+  domainToUse: string
+  postConfig: PostConfig
+  isEnabledPickUp: boolean
+}

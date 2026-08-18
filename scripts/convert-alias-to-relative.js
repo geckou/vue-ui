@@ -29,7 +29,7 @@ function processDirectory(dir) {
 function replaceAlias(filePath) {
   const content = fs.readFileSync(filePath, 'utf-8')
   const updatedContent = content.replace(new RegExp(`(['"])${alias}`, 'g'), (match, quote) => {
-    const relativePath = path.relative(path.dirname(filePath), targetDir)
+    const relativePath = path.relative(path.dirname(filePath), targetDir) || '.'
     return `${quote}${relativePath}/`
   })
 

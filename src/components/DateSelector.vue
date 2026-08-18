@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed, watch, watchEffect } from 'vue'
 import { FormValidationManager } from '~/scripts/form-validation-manager'
 const emit = defineEmits<{ (e: 'update:modelValue', newValue: string): void }>()
 
@@ -176,7 +177,7 @@ watch(() => birthday.value, newValue => {
 </template>
 
 <style lang="scss" module>
-@use '~/assets/scss/mixin.scss' as *;
+@use '@/assets/scss/mixin' as *;
 
 .date_selector {
   width      : max-content;

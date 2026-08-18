@@ -5,6 +5,8 @@
 </template>
 
 <style lang="scss" module>
+@use '@/assets/scss/mixin' as *;
+
 .input_group {
   display: inline-flex;
   gap    : 1px;

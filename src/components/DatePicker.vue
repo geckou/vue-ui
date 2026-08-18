@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, reactive, watch } from 'vue'
 import { FormValidationManager } from '~/scripts/form-validation-manager'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 
@@ -146,7 +147,7 @@ if (props.modelValue) {
 </template>
 
 <style lang="scss" module>
-@use '~/assets/scss/mixin.scss' as *;
+@use '@/assets/scss/mixin' as *;
 
 .icon {
   @include icon($color: var(--link-color));

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7e2b52"/>
+      <stop offset="100%" stop-color="#e8a5c5"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <g fill="rgba(255,255,255,.18)">
+    <circle cx="380" cy="260" r="180"/>
+    <circle cx="960" cy="700" r="240"/>
+  </g>
+  <text x="60" y="820" font-family="Hiragino Sans, Noto Sans JP, sans-serif" font-size="64" fill="rgba(255,255,255,.9)">夜のカフェ</text>
+</svg>

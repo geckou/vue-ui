@@ -24,3 +24,5 @@ node_modules
 npm-debug.log*
 tmp/
 .npmrc
+demo-dist
+.claude/

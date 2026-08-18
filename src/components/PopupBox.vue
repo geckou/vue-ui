@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 const props = withDefaults(defineProps<{
   position?: {
     x: 'left' | 'right' | 'center'

@@ -1,22 +1,104 @@
 # Geckou Vue UI Components
+
+Vue 3 用の再利用可能な UI コンポーネント集。フォーム系コンポーネントと記事一覧コンポーネント（旧 [`@geckou/vue-article-list`](https://github.com/geckou/vue-article-list)）を統合しています。
+
+**デモサイト: https://geckou.github.io/vue-ui/**
+
 ## Installation
-```bash
-npm install https://github.com/geckou/vue-ui-components.git
+
+`.npmrc`
+
 ```
-OR
+@geckou:registry=https://npm.pkg.github.com/
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
 ```bash
-yarn add https://github.com/geckou/vue-ui-components.git
+yarn add @geckou/vue-ui
+# もしくは
+yarn add https://github.com/geckou/vue-ui.git
 ```
 
 ## Usage
-```javascript
-import VueUiComponents from 'vue-ui-components'
+
+```ts
+import { createApp } from 'vue'
+import GeckouVueUi from '@geckou/vue-ui'
+import App from './App.vue'
+
+createApp(App).use(GeckouVueUi).mount('#app')
 ```
-OR
-```javascript
-import { GKTextBox } from 'vue-ui-components'
-import { GKBasicButton } from 'vue-ui-components'
+
+```ts
+// 個別インポート
+import { GKTextBox, GKStandardList } from '@geckou/vue-ui'
 ```
+
+## Components
+
+### Form
+
+`GKTextBox` / `GKTextArea` / `GKSelectBox` / `GKCheckBox` / `GKCheckBoxes` / `GKCheckButton` /
+`GKLabeledCheckbox` / `GKLabeledFieldset` / `GKRadioButtons` / `GKToggleButton` / `GKBasicButton` /
+`GKInputBox` / `GKInputGroup` / `GKTabUI` / `GKSlideDownUi` / `GKDropdownUi` / `GKModalBox` /
+`GKPopupBox` / `GKLoadingSpinner` / `GKErrorMessage`
+
+> `DatePicker` / `DateRangePicker` / `DateSelector` は Nuxt アプリ側の `FormValidationManager` に依存しているため、`src` には残していますが公開エクスポートには含めていません。
+
+### Article List
+
+`GKStandardList` / `GKRoundedList` / `GKArtisticList` / `GKTileList` / `GKSimpleList` /
+`GKRowList` / `GKNewsList` / `GKEntertainmentList` / `GKGalleryList` / `GKGridList`
+
+WordPress REST API（`?_embed` 付き）のレスポンス配列をそのまま渡せます。
+
+```vue
+<script setup lang="ts">
+import type { Category, ListSettings } from '@geckou/vue-ui'
+import { GKStandardList } from '@geckou/vue-ui'
+
+const settings: ListSettings = {
+  domainToUse: 'example.com',
+  postConfig : {
+    article_page_path: '/article/',
+    query_key_name   : 'article',
+    useAuthor        : true,
+    useCategory      : true,
+    useTag           : true,
+  },
+  isEnabledPickUp: true,
+}
+
+const categories: Category[] = [{ id: '1', name: 'デザイン' }]
+const articles = ref<any[]>([])
+</script>
+
+<template>
+  <GKStandardList
+    :articles="articles"
+    :categories="categories"
+    :settings="settings"
+  />
+</template>
+```
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `articles` | `any[]` | ✅ | WordPress REST API のレスポンス配列 |
+| `categories` | `Category[]` | ✅ | カテゴリ ID と表示名の対応 |
+| `settings` | `ListSettings` | ✅ | 記事リンクの組み立て設定と表示オプション |
+| `columnNumber` | `number` | `GKGridList` のみ ✅ | グリッドのカラム数 |
+
+## Development
+
+```bash
+yarn install
+yarn dev          # デモサイトを起動（http://localhost:5555/vue-ui/）
+yarn build        # 配布用 dist を生成
+yarn build:demo   # デモサイトを demo-dist に出力
+```
+
+デモサイトは `main` への push で GitHub Pages に自動デプロイされます（`.github/workflows/deploy-demo.yml`）。
 
 ## Types
 
@@ -101,7 +183,32 @@ import { GKBasicButton } from 'vue-ui-components'
 | `regex`    | `RegExp`   | ✅      | The regular expression used for validation.               |
 | `message`  | `string`   | ✅      | The error message displayed when validation fails.        |
 
-## Components
+### `Category`
+
+| Prop Name | Type     | Required | Description                    |
+|-----------|----------|----------|--------------------------------|
+| `id`      | `string` | ✅       | WordPress のカテゴリ ID        |
+| `name`    | `string` | ✅       | 表示するカテゴリ名             |
+
+### `PostConfig`
+
+| Prop Name           | Type      | Required | Description                                          |
+|---------------------|-----------|----------|------------------------------------------------------|
+| `article_page_path` | `string`  | ✅       | 記事詳細ページのパス                                 |
+| `query_key_name`    | `string`  | ✅       | 記事 ID を渡すクエリキー                             |
+| `useAuthor`         | `boolean` | ❌       | 著者を表示するか                                     |
+| `useCategory`       | `boolean` | ❌       | カテゴリを表示するか                                 |
+| `useTag`            | `boolean` | ❌       | タグを表示するか                                     |
+
+### `ListSettings`
+
+| Prop Name         | Type         | Required | Description                                |
+|-------------------|--------------|----------|--------------------------------------------|
+| `domainToUse`     | `string`     | ✅       | 記事リンクに使うドメイン                   |
+| `postConfig`      | `PostConfig` | ✅       | 記事詳細ページの組み立て設定               |
+| `isEnabledPickUp` | `boolean`    | ✅       | 先頭の記事を大きく表示するか               |
+
+## Component Props (Form)
 ### `GKTextBox`
 
 | Prop Name          | Type                        | Required | Default            | Description                                    |

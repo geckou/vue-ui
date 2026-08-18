@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { onMounted, onBeforeUnmount, watch } from 'vue'
+import IconClose from '@/components/Icon/CloseIcon.vue'
+
 const props = defineProps<{
   isShown: boolean,
   size?: 'small' | 'medium' | 'large',
@@ -6,12 +9,21 @@ const props = defineProps<{
 
 const emit = defineEmits<{ (e: 'closeModal', state: Boolean): void }>()
 const bodyElement = document.querySelector('body') as HTMLElement
-const isLocked = useScrollLock(bodyElement)
-const toggleScrollLock = useToggle(isLocked)
+let previousOverflow = ''
+
+const toggleScrollLock = (shouldLock: boolean) => {
+  if (!bodyElement) return
+
+  if (shouldLock) {
+    previousOverflow = bodyElement.style.overflow
+    bodyElement.style.overflow = 'hidden'
+  } else {
+    bodyElement.style.overflow = previousOverflow
+  }
+}
 
 const closeModal = () => {
   toggleScrollLock(false)
-  bodyElement.style.overflow = ''
   emit('closeModal', false)
 }
 
@@ -57,6 +69,8 @@ onBeforeUnmount(() => closeModal())
 </template>
 
 <style lang="scss" module>
+@use '@/assets/scss/mixin' as *;
+
 .container {
   display         : flex;
   flex-direction  : column;

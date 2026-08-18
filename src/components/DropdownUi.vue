@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, onMounted, onUpdated } from 'vue'
+import IconChevronDown from '@/components/Icon/KeyboardArrowDownIcon.vue'
 const props = withDefaults(defineProps<{
   isHiddenArrow?: boolean,
   contentAlignment?: 'left' | 'center' | 'right',
@@ -73,6 +75,8 @@ defineExpose({ isContentsOpened })
 </template>
 
 <style lang="scss" module>
+@use '@/assets/scss/mixin' as *;
+
 .drop_down_box {
   position: relative;
 }

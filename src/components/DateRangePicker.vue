@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 type Emits = {
   (e: string, newValue: string | number): void
 }

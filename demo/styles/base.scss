@@ -1,0 +1,114 @@
+@use '@/assets/scss/functions' as *;
+
+:root {
+  $maxViewport: 1200;
+  $minViewport: 576;
+
+  --white              : #fff;
+  --black              : #222;
+  --black-rgb          : 34, 34, 34;
+  --dark-white         : #eee;
+  --light-gray         : #e5e5e5;
+  --gray               : #8a8f98;
+  --base-color         : #fbfbfc;
+  --primary-color      : #1f7a6c;
+  --main-color         : #1f7a6c;
+  --sub-color          : #e8f2f0;
+  --text-color         : #222;
+  --link-color         : var(--primary-color);
+  --checked-color      : var(--primary-color);
+  --trigger-color      : var(--primary-color);
+  --disable-text-color : var(--gray);
+  --border-color       : var(--light-gray);
+  --light-border-color : var(--dark-white);
+  --error-text-color   : #c0392b;
+  --error-background-color: #fdecea;
+  --overlay-color      : rgba(0, 0, 0, .4);
+  --shadow-color       : rgba(34, 34, 34, .12);
+  --box-shadow         : 0 1px 2px var(--shadow-color);
+  --button-shadow      : 0 0 0 1px rgba(34, 34, 34, .1) inset;
+
+  --animation-duration : .3s;
+  --transition-duration: .2s;
+  --duration           : .2s;
+
+  --bv                 : #{calcClamp(6, 8, $minViewport, $maxViewport)};
+  --sp                 : var(--bv);
+  --sp-larger          : calc(var(--sp) * 8);
+  --sp-large           : calc(var(--sp) * 4);
+  --sp-medium          : calc(var(--sp) * 2);
+  --sp-small           : var(--sp);
+  --sp-min             : calc(var(--sp) / 2);
+
+  --fs-small           : .875rem;
+  --fs-large           : 1.25rem;
+
+  --icon-size          : calc(var(--bv) * 3);
+  --small-icon-size    : calc(var(--bv) * 2);
+  --medium-icon-size   : calc(var(--bv) * 3);
+  --large-icon-size    : calc(var(--bv) * 5);
+  --icon-small         : var(--small-icon-size);
+  --icon-medium        : var(--medium-icon-size);
+
+  --radius-size        : 6px;
+  --radius-small       : 4px;
+  --border-size        : 1px;
+  --border-style       : solid;
+  --padding-size       : var(--sp-medium);
+  --contents-max-width : 1200px;
+  --mobile-lower-width : 576px;
+  --desktop-lower-width: 992px;
+  --z-index-nav        : 100;
+  --z-index-overlay    : 200;
+
+  --sidebar-width      : 240px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color           : var(--text-color);
+  background-color: var(--base-color);
+  font-family     : 'Helvetica Neue', Arial, 'Hiragino Sans', 'Noto Sans JP', Meiryo, sans-serif;
+  line-height     : 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color          : var(--primary-color);
+  text-decoration: none;
+}
+
+ul,
+ol,
+li,
+dl,
+dt,
+dd {
+  margin    : 0;
+  padding   : 0;
+  list-style: none;
+
+  &[role='list'] {
+    list-style: none;
+  }
+}
+
+img {
+  display   : block;
+  max-width : 100%;
+  max-height: 100%;
+}
+
+code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size  : .875em;
+}

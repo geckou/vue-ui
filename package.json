@@ -1,7 +1,7 @@
 {
   "name": "@geckou/vue-ui",
   "version": "0.0.57",
-  "description": "A set of reusable Vue UI by Geckou",
+  "description": "A set of reusable Vue UI components (forms & article lists) by Geckou",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -42,8 +42,14 @@
     "dev": "vite",
     "clean": "rm -rf dist",
     "convert-alias": "node scripts/convert-alias-to-relative.js",
-    "build": "yarn clean && rsync -av --exclude 'main.ts' --exclude 'App.vue' src/ dist/ && yarn convert-alias",
+    "build": "yarn clean && rsync -av --exclude 'main.ts' --exclude 'App.vue' --exclude '.DS_Store' src/ dist/ && yarn convert-alias",
+    "build:demo": "vite build",
+    "preview:demo": "vite preview",
     "lint": "eslint src --ext .ts,.vue",
     "prepublishOnly": "yarn build"
-  }
+  },
+  "dependencies": {
+    "date-fns": "^4.4.0"
+  },
+  "homepage": "https://geckou.github.io/vue-ui/"
 }

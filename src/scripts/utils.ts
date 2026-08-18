@@ -1,0 +1,30 @@
+import type { PostConfig } from '@/types'
+
+export const generateQueryObject = (url: string): Record<string, string> => {
+  const regex = /[?&]([^=#]+)=([^&#]*)/g
+  const queryObject: Record<string, string> = {}
+
+  for (let match; (match = regex.exec(url)) !== null; ) {
+    queryObject[match[1]] = match[2]
+  }
+
+  return queryObject
+}
+
+export const returnTagList = (articleObject: any): string[] => {
+  const terms = articleObject?.['_embedded']?.['wp:term']?.[1] ?? []
+  return terms.map((tag: any) => tag.name)
+}
+
+export const returnArticlePath = (postConfig: PostConfig, domain: string, articleId: string) => `https://${domain}/${postConfig.article_page_path}?${postConfig.query_key_name}=${articleId}`
+
+/**
+ * 各カードは postConfig.author / category / tag を参照するが、
+ * 設定側では useAuthor / useCategory / useTag で渡すこともできるため両対応させる
+ */
+export const normalizePostConfig = (postConfig: any): PostConfig => ({
+  ...postConfig,
+  author  : postConfig?.author ?? postConfig?.useAuthor ?? false,
+  category: postConfig?.category ?? postConfig?.useCategory ?? false,
+  tag     : postConfig?.tag ?? postConfig?.useTag ?? false,
+})
