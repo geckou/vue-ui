@@ -48,7 +48,10 @@
     "build:demo": "vite build",
     "preview:demo": "vite preview",
     "lint": "eslint src demo --ext .ts,.vue",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "release": "bash scripts/release.sh",
+    "release:minor": "bash scripts/release.sh minor",
+    "release:major": "bash scripts/release.sh major"
   },
   "dependencies": {
     "date-fns": "^4.4.0"

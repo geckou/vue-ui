@@ -1,8 +1,11 @@
 # Geckou Vue UI Components
 
+[![npm](https://img.shields.io/npm/v/@geckou/vue-ui?color=1c4ac9)](https://www.npmjs.com/package/@geckou/vue-ui)
+[![license](https://img.shields.io/npm/l/@geckou/vue-ui?color=1c4ac9)](LICENSE)
+
 Vue 3 用の再利用可能な UI コンポーネント集。入力フォーム系のコンポーネントと、WordPress REST API の記事データをそのまま渡せる記事一覧コンポーネント（10 レイアウト）を収録しています。
 
-**デモサイト: https://ui.geckou.net/**
+**デモサイト: https://ui.geckou.net/** ／ **npm: https://www.npmjs.com/package/@geckou/vue-ui**
 
 ## このパッケージについて
 
@@ -200,12 +203,25 @@ yarn build:demo   # デモサイトを demo-dist に出力
 
 デモサイトは `main` への push で GitHub Pages に自動デプロイされます（`.github/workflows/deploy-demo.yml`）。
 
-パッケージは `v*` のタグを push すると npm に publish されます（`.github/workflows/publish.yml`）。
+### Release
+
+`v*` のタグを push すると npm に publish されます（`.github/workflows/publish.yml`）。
+バージョン更新からタグ push までは release スクリプトにまとめてあります。
 
 ```bash
-yarn version --new-version 0.2.2   # package.json の更新とタグ作成
-git push origin main --tags
+yarn release          # パッチ更新（0.2.2 -> 0.2.3）
 ```
+
+```bash
+yarn release:minor    # マイナー更新（0.2.3 -> 0.3.0）
+```
+
+```bash
+yarn release 0.4.0    # バージョンを直接指定
+```
+
+未コミットの変更がある場合と main 以外のブランチでは中断します。
+タグは 1 本ずつ push します（4 本以上をまとめて push すると GitHub がワークフローを起動しないため）。
 
 
 ## Types

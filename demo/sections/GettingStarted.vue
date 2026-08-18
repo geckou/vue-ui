@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /* eslint-disable no-useless-escape -- テンプレートリテラル内の閉じスクリプトタグを打ち消すためのエスケープ */
 import CodeBlock from '~demo/components/CodeBlock.vue'
+import { NPM_URL, REPOSITORY_URL } from '~demo/data/repository'
 
 const INSTALL = `yarn add @geckou/vue-ui
 # もしくは
@@ -55,14 +56,24 @@ const CSS_VARS = `:root {
       <p :class="$style.lead">
         入力フォーム系のコンポーネントと、WordPress REST API の記事データをそのまま渡せる記事一覧コンポーネント（10 レイアウト）を収録しています。
       </p>
-      <a
-        :class="$style.heroLink"
-        href="https://github.com/geckou/vue-ui"
-        target="_blank"
-        rel="noopener"
-      >
-        github.com/geckou/vue-ui
-      </a>
+      <div :class="$style.heroLinks">
+        <a
+          :class="$style.heroLink"
+          :href="REPOSITORY_URL"
+          target="_blank"
+          rel="noopener"
+        >
+          github.com/geckou/vue-ui
+        </a>
+        <a
+          :class="$style.heroLink"
+          :href="NPM_URL"
+          target="_blank"
+          rel="noopener"
+        >
+          npm: @geckou/vue-ui
+        </a>
+      </div>
     </section>
 
     <section :class="$style.block">
@@ -70,7 +81,11 @@ const CSS_VARS = `:root {
         インストール
       </h3>
       <p :class="$style.text">
-        npm で配布しています。Vue 3 が peerDependency です。
+        npm で配布しています（<a
+          :href="NPM_URL"
+          target="_blank"
+          rel="noopener"
+        >@geckou/vue-ui</a>）。Vue 3 が peerDependency です。
       </p>
       <CodeBlock
         :code="INSTALL"
@@ -183,9 +198,15 @@ const CSS_VARS = `:root {
   }
 }
 
+.heroLinks {
+  display           : flex;
+  flex-wrap         : wrap;
+  gap               : var(--sp-small);
+  margin-block-start: var(--sp-large);
+}
+
 .heroLink {
   align-self     : flex-start;
-  margin-block-start: var(--sp-large);
   padding        : .4rem 1rem;
   border         : 1px solid rgba(224, 224, 228, .4);
   border-radius  : 999px;
