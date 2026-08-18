@@ -24,6 +24,8 @@ yarn add @geckou/vue-ui
 npm install @geckou/vue-ui
 ```
 
+Vue 本体は同梱していません。プロジェクト側の Vue 3.0 以上を使います（`peerDependencies`）。
+
 ## Usage
 
 ```ts

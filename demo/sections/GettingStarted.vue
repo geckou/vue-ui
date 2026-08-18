@@ -85,7 +85,7 @@ const CSS_VARS = `:root {
           :href="NPM_URL"
           target="_blank"
           rel="noopener"
-        >@geckou/vue-ui</a>）。Vue 3 が peerDependency です。
+        >@geckou/vue-ui</a>）。Vue 3 のプロジェクトに追加してください。Vue 本体は同梱していないので、プロジェクト側の Vue（3.0 以上）がそのまま使われます。
       </p>
       <CodeBlock
         :code="INSTALL"
