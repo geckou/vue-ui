@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable no-useless-escape -- テンプレートリテラル内の閉じスクリプトタグを打ち消すためのエスケープ */
 import CodeBlock from '~demo/components/CodeBlock.vue'
 
 const NPMRC = `@geckou:registry=https://npm.pkg.github.com/
@@ -50,8 +51,12 @@ const CSS_VARS = `:root {
 <template>
   <div :class="$style.page">
     <section :class="$style.hero">
-      <p :class="$style.eyebrow">@geckou/vue-ui</p>
-      <h2 :class="$style.title">フォーム UI と記事一覧 UI を、ひとつのパッケージで</h2>
+      <p :class="$style.eyebrow">
+        @geckou/vue-ui
+      </p>
+      <h2 :class="$style.title">
+        フォーム UI と記事一覧 UI を、ひとつのパッケージで
+      </h2>
       <p :class="$style.lead">
         Geckou のプロダクトで使い回している Vue 3 コンポーネント集です。
         入力フォーム系のコンポーネントと、WordPress REST API の記事データをそのまま渡せる記事一覧コンポーネント（10 レイアウト）を収録しています。
@@ -60,7 +65,9 @@ const CSS_VARS = `:root {
     </section>
 
     <section :class="$style.block">
-      <h3 :class="$style.heading">インストール</h3>
+      <h3 :class="$style.heading">
+        インストール
+      </h3>
       <p :class="$style.text">
         GitHub Packages で配布しています。プロジェクトルートの <code>.npmrc</code> にレジストリを設定してください。
       </p>
@@ -75,35 +82,53 @@ const CSS_VARS = `:root {
     </section>
 
     <section :class="$style.block">
-      <h3 :class="$style.heading">使い方</h3>
-      <p :class="$style.text">プラグインとして一括登録するか、必要なコンポーネントだけ名前付きインポートします。</p>
-      <CodeBlock :code="PLUGIN_USAGE" language="ts" />
+      <h3 :class="$style.heading">
+        使い方
+      </h3>
+      <p :class="$style.text">
+        プラグインとして一括登録するか、必要なコンポーネントだけ名前付きインポートします。
+      </p>
+      <CodeBlock
+        :code="PLUGIN_USAGE"
+        language="ts"
+      />
       <CodeBlock :code="NAMED_USAGE" />
     </section>
 
     <section :class="$style.block">
-      <h3 :class="$style.heading">スタイルの前提</h3>
+      <h3 :class="$style.heading">
+        スタイルの前提
+      </h3>
       <p :class="$style.text">
         各コンポーネントは CSS カスタムプロパティで配色と余白を受け取ります。
         アプリ側のグローバル CSS で以下の変数を定義すれば、そのままプロダクトのトーンに馴染みます。
         下の値は geckou.net のブランドカラーに合わせたもので、このデモサイト自体も同じトークンで組んでいます
         （OS の配色設定に応じてライト / ダークが切り替わります）。
       </p>
-      <CodeBlock :code="CSS_VARS" language="css" />
+      <CodeBlock
+        :code="CSS_VARS"
+        language="css"
+      />
     </section>
 
     <section :class="$style.block">
-      <h3 :class="$style.heading">収録コンポーネント</h3>
+      <h3 :class="$style.heading">
+        収録コンポーネント
+      </h3>
       <div :class="$style.cards">
         <article :class="$style.card">
-          <h4 :class="$style.cardTitle">Form</h4>
+          <h4 :class="$style.cardTitle">
+            Form
+          </h4>
           <p :class="$style.cardText">
             TextBox / TextArea / SelectBox / CheckBox / CheckBoxes / LabeledCheckbox /
             RadioButtons / ToggleButton / BasicButton / LabeledFieldset / TabUI ほか
           </p>
         </article>
         <article :class="$style.card">
-          <h4 :class="$style.cardTitle">Article List</h4>
+          <h4 :class="$style.cardTitle">
+            Article List
+          </h4>
           <p :class="$style.cardText">
             StandardList / RoundedList / ArtisticList / TileList / SimpleList /
             RowList / NewsList / EntertainmentList / GalleryList / GridList

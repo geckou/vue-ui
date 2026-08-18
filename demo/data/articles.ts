@@ -105,13 +105,13 @@ const createArticle = (seed: Seed, index: number) => {
   const avatar = asset(`images/avatar-${imageNumber}.svg`)
 
   return {
-    id     : String(index + 1),
-    date   : seed.date,
-    link   : `https://example.com/article/?article=${index + 1}`,
-    slug   : `sample-post-${index + 1}`,
-    title  : { rendered: seed.title },
-    excerpt: { rendered: `<p>${seed.excerpt}</p>` },
-    content: { rendered: `<p>${seed.excerpt}</p>` },
+    id        : String(index + 1),
+    date      : seed.date,
+    link      : `https://example.com/article/?article=${index + 1}`,
+    slug      : `sample-post-${index + 1}`,
+    title     : { rendered: seed.title },
+    excerpt   : { rendered: `<p>${seed.excerpt}</p>` },
+    content   : { rendered: `<p>${seed.excerpt}</p>` },
     categories: seed.categories,
     _embedded : {
       author: [

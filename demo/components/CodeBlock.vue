@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<{
 
 const copied = ref(false)
 
-const copy = async () => {
+const copy = async() => {
   try {
     await navigator.clipboard.writeText(props.code)
     copied.value = true

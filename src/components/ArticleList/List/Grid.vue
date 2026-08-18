@@ -15,11 +15,10 @@ const props = defineProps<{
   settings: ListSettings
 }>()
 
-const {
-  domainToUse,
-  isEnabledPickUp,
-} = props.settings
-const postConfig = normalizePostConfig(props.settings.postConfig)
+// settings は親から動的に差し替えられるため computed で参照する
+const domainToUse = computed(() => props.settings.domainToUse)
+const isEnabledPickUp = computed(() => props.settings.isEnabledPickUp)
+const postConfig = computed(() => normalizePostConfig(props.settings.postConfig))
 
 const listElement = ref<HTMLElement | null>(null)
 const listWidth = ref(0)

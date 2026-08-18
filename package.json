@@ -1,6 +1,6 @@
 {
   "name": "@geckou/vue-ui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A set of reusable Vue UI components (forms & article lists) by Geckou",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -45,7 +45,7 @@
     "build": "yarn clean && rsync -av --exclude 'main.ts' --exclude 'App.vue' --exclude '.DS_Store' src/ dist/ && yarn convert-alias",
     "build:demo": "vite build",
     "preview:demo": "vite preview",
-    "lint": "eslint src --ext .ts,.vue",
+    "lint": "eslint src demo --ext .ts,.vue",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {

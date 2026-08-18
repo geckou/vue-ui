@@ -1,7 +1,7 @@
 <script setup lang="ts">
+/* eslint-disable no-useless-escape -- テンプレートリテラル内の閉じスクリプトタグを打ち消すためのエスケープ */
 import type { ListSettings } from '@/types'
-import { computed, ref } from 'vue'
-import DemoSection from '~demo/components/DemoSection.vue'
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import CodeBlock from '~demo/components/CodeBlock.vue'
 import LabeledCheckbox from '@/components/LabeledCheckbox.vue'
 import SelectBox from '@/components/SelectBox.vue'
@@ -20,13 +20,13 @@ import GridList from '@/components/ArticleList/List/Grid.vue'
 type ListDefinition = {
   key: string
   name: string
-  component: any
+  component: unknown
   description: string
   needsColumnNumber?: boolean
 }
 
 const LISTS: ListDefinition[] = [
-  { key: 'standard', name: 'StandardList', component: StandardList, description: 'サムネイル・見出し・抜粋・メタ情報を揃えた標準レイアウト。3 カラム。' },
+  { key: 'standard', name: 'StandardList', component: StandardList, description: 'サムネイル・見出し・抜粋・メタ情報を揃えた標準レイアウト。' },
   { key: 'rounded', name: 'RoundedList', component: RoundedList, description: '角丸のカードで柔らかい印象に。ブログや読み物向け。' },
   { key: 'artistic', name: 'ArtisticList', component: ArtisticList, description: '画像を大きく見せる構成。ビジュアル主体のメディア向け。' },
   { key: 'tile', name: 'TileList', component: TileList, description: '画像の上にテキストを重ねるタイル型。' },
@@ -38,19 +38,49 @@ const LISTS: ListDefinition[] = [
   { key: 'grid', name: 'GridList', component: GridList, description: 'カードごとに大きさと向きが変わるグリッド。columnNumber が必須。', needsColumnNumber: true },
 ]
 
+const LIGHT_COLORS = {
+  '--base-color'   : '#ffffff',
+  '--main-color'   : '#1c4ac9',
+  '--sub-color'    : '#e7ecfb',
+  '--primary-color': '#1c4ac9',
+  '--text-color'   : '#15143a',
+}
+
+const DARK_COLORS = {
+  '--base-color'   : '#111729',
+  '--main-color'   : '#1c4ac9',
+  '--sub-color'    : '#1d2740',
+  '--primary-color': '#5b84ff',
+  '--text-color'   : '#e0e0e4',
+}
+
+const COLOR_LABELS: Record<keyof typeof LIGHT_COLORS, string> = {
+  '--base-color'   : '背景',
+  '--main-color'   : 'メイン',
+  '--sub-color'    : 'サブ',
+  '--primary-color': '見出し / リンク',
+  '--text-color'   : 'テキスト',
+}
+
+const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches
+
+const theme = ref('standard')
+const columnNumber = ref('3')
 const isEnabledPickUp = ref(true)
 const useAuthor = ref(true)
 const useCategory = ref(true)
 const useTag = ref(true)
 const hasImage = ref(true)
-const columnNumber = ref('3')
+const colors = reactive({ ...LIGHT_COLORS })
 
+const THEME_OPTIONS = LISTS.map(list => ({ label: list.name, value: list.key }))
 const COLUMN_OPTIONS = [
   { label: '2 カラム', value: '2' },
   { label: '3 カラム', value: '3' },
   { label: '4 カラム', value: '4' },
 ]
 
+const currentList = computed(() => LISTS.find(list => list.key === theme.value) ?? LISTS[0])
 const articles = computed(() => hasImage.value ? ARTICLES : ARTICLES_WITHOUT_IMAGE)
 
 const settings = computed<ListSettings>(() => ({
@@ -65,21 +95,41 @@ const settings = computed<ListSettings>(() => ({
   isEnabledPickUp: isEnabledPickUp.value,
 }))
 
-const SETUP_CODE = `<script setup lang="ts">
+const resetColors = () => Object.assign(colors, prefersDark() ? DARK_COLORS : LIGHT_COLORS)
+
+/** サイドバーのレイアウト名リンク（#/article-list#gallery）でテーマを切り替える */
+const applyHash = () => {
+  const anchor = window.location.hash.split('#')[2] ?? ''
+  if (LISTS.some(list => list.key === anchor)) theme.value = anchor
+}
+
+onMounted(() => {
+  resetColors()
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', resetColors)
+  window.addEventListener('hashchange', applyHash)
+  applyHash()
+})
+
+onUnmounted(() => {
+  window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', resetColors)
+  window.removeEventListener('hashchange', applyHash)
+})
+
+const SETUP_CODE = computed(() => `<script setup lang="ts">
 import type { Category, ListSettings } from '@geckou/vue-ui'
 import { ref, onMounted } from 'vue'
-import { StandardList } from '@geckou/vue-ui'
+import { ${currentList.value.name} } from '@geckou/vue-ui'
 
 const settings: ListSettings = {
   domainToUse: 'example.com',
   postConfig : {
     article_page_path: '/article/',
     query_key_name   : 'article',
-    useAuthor        : true,
-    useCategory      : true,
-    useTag           : true,
+    useAuthor        : ${useAuthor.value},
+    useCategory      : ${useCategory.value},
+    useTag           : ${useTag.value},
   },
-  isEnabledPickUp: true, // 先頭記事をピックアップ表示にする
+  isEnabledPickUp: ${isEnabledPickUp.value},
 }
 
 const categories: Category[] = [
@@ -97,42 +147,57 @@ onMounted(async () => {
 <\/script>
 
 <template>
-  <StandardList
+  <${currentList.value.name}
     :articles="articles"
     :categories="categories"
-    :settings="settings"
+    :settings="settings"${currentList.value.needsColumnNumber ? `\n    :columnNumber="${columnNumber.value}"` : ''}
   />
-<\/template>`
+<\/template>
 
-const listCode = (definition: ListDefinition) => definition.needsColumnNumber
-  ? `<${definition.name}
-  :articles="articles"
-  :categories="categories"
-  :settings="settings"
-  :columnNumber="${columnNumber.value}"
-/>`
-  : `<${definition.name}
-  :articles="articles"
-  :categories="categories"
-  :settings="settings"
-/>`
+<style>
+/* 一覧を置く要素のカラーとコンテナクエリの基準 */
+.article-list-area {
+  container-type : inline-size;
+${Object.entries(colors).map(([key, value]) => `  ${key.padEnd(15)}: ${value};`).join('\n')}
+}
+<\/style>`)
 </script>
 
 <template>
   <div :class="$style.page">
     <section :class="$style.intro">
-      <h3 :class="$style.introTitle">記事一覧コンポーネント</h3>
+      <h3 :class="$style.introTitle">
+        記事一覧プレイグラウンド
+      </h3>
       <p :class="$style.introText">
         WordPress REST API（<code>?_embed</code> 付き）のレスポンス配列をそのまま <code>articles</code> に渡すだけで一覧が組み上がります。
-        レイアウトは 10 種類。<code>settings.isEnabledPickUp</code> を有効にすると先頭の記事だけ大きく表示されます。
-        以下のデモはモックデータで動作しています。
+        レイアウト・表示項目・配色を切り替えると、下のプレビューとコードがその場で更新されます（データはモックです）。
       </p>
-      <CodeBlock :code="SETUP_CODE" />
     </section>
 
-    <section :class="$style.controls">
-      <p :class="$style.controlsTitle">表示オプション</p>
-      <div :class="['demo-preview', $style.controlsBody]">
+    <section :class="['demo-preview', $style.controls]">
+      <div :class="$style.controlRow">
+        <label :class="$style.field">
+          <span :class="$style.fieldLabel">レイアウト</span>
+          <SelectBox
+            v-model="theme"
+            name="listTheme"
+            :options="THEME_OPTIONS"
+            canOmitSelect
+          />
+        </label>
+        <label :class="$style.field">
+          <span :class="$style.fieldLabel">カラム数（GridList のみ）</span>
+          <SelectBox
+            v-model="columnNumber"
+            name="columnNumber"
+            :options="COLUMN_OPTIONS"
+            canOmitSelect
+          />
+        </label>
+      </div>
+
+      <div :class="$style.controlRow">
         <LabeledCheckbox
           v-model="isEnabledPickUp"
           name="pickup"
@@ -158,35 +223,60 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
           name="image"
           label="アイキャッチあり"
         />
-        <div :class="$style.select">
-          <SelectBox
-            v-model="columnNumber"
-            name="columnNumber"
-            :options="COLUMN_OPTIONS"
-            canOmitSelect
-          />
-          <span :class="$style.selectNote">GridList のカラム数</span>
+      </div>
+
+      <div :class="$style.controlRow">
+        <div
+          v-for="(value, key) in colors"
+          :key="key"
+          :class="$style.colorField"
+        >
+          <input
+            v-model="colors[key]"
+            type="color"
+            :class="$style.colorInput"
+          >
+          <span :class="$style.fieldLabel">{{ COLOR_LABELS[key] }}</span>
         </div>
+        <button
+          type="button"
+          :class="$style.reset"
+          @click="resetColors"
+        >
+          配色をリセット
+        </button>
       </div>
     </section>
 
-    <DemoSection
-      v-for="definition in LISTS"
-      :key="definition.key"
-      :id="definition.key"
-      :title="definition.name"
-      :description="definition.description"
-      :code="listCode(definition)"
-      contained
-    >
-      <component
-        :is="definition.component"
-        :articles="articles"
-        :categories="CATEGORIES"
-        :settings="settings"
-        v-bind="definition.needsColumnNumber ? { columnNumber: Number(columnNumber) } : {}"
-      />
-    </DemoSection>
+    <section :class="$style.previewBlock">
+      <header :class="$style.previewHeader">
+        <h3 :class="$style.previewTitle">
+          {{ currentList.name }}
+        </h3>
+        <p :class="$style.previewDescription">
+          {{ currentList.description }}
+        </p>
+      </header>
+      <div
+        :class="$style.preview"
+        :style="colors"
+      >
+        <component
+          :is="currentList.component"
+          :articles="articles"
+          :categories="CATEGORIES"
+          :settings="settings"
+          v-bind="currentList.needsColumnNumber ? { columnNumber: Number(columnNumber) } : {}"
+        />
+      </div>
+    </section>
+
+    <section :class="$style.codeBlock">
+      <h3 :class="$style.previewTitle">
+        この設定のコード
+      </h3>
+      <CodeBlock :code="SETUP_CODE" />
+    </section>
   </div>
 </template>
 
@@ -194,27 +284,31 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
 .page {
   display       : flex;
   flex-direction: column;
-  gap           : 1.5rem;
+  gap           : var(--sp-large);
 }
 
-.intro {
+.intro,
+.previewBlock,
+.codeBlock {
   display         : flex;
   flex-direction  : column;
-  gap             : .75rem;
+  gap             : var(--sp-medium);
   padding         : var(--sp-large);
   border          : 1px solid var(--border-color);
   border-radius   : var(--radius-size);
   background-color: var(--surface-color);
 }
 
-.introTitle {
+.introTitle,
+.previewTitle {
   margin        : 0;
   font-size     : var(--fs-large);
   font-weight   : 500;
   letter-spacing: var(--letter-spacing-normal);
 }
 
-.introText {
+.introText,
+.previewDescription {
   margin     : 0;
   color      : var(--gray);
   font-size  : var(--fs-small);
@@ -222,7 +316,7 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
 
   code {
     padding         : .1em .4em;
-    border-radius   : 4px;
+    border-radius   : var(--radius-small);
     background-color: var(--sub-color);
     color           : var(--primary-color);
   }
@@ -230,42 +324,85 @@ const listCode = (definition: ListDefinition) => definition.needsColumnNumber
 
 .controls {
   position        : sticky;
-  top             : 0;
+  top             : calc(var(--global-header-height) + var(--sp-small));
   z-index         : 10;
   display         : flex;
   flex-direction  : column;
-  gap             : .5rem;
-  padding         : var(--sp-medium) var(--sp-large);
+  gap             : var(--sp-medium);
+  padding         : var(--sp-large);
   border          : 1px solid var(--border-color);
   border-radius   : var(--radius-size);
-  background-color: color-mix(in srgb, var(--base-color) 90%, transparent);
+  background-color: color-mix(in srgb, var(--base-color) 92%, transparent);
   backdrop-filter : blur(8px);
 }
 
-.controlsTitle {
-  margin        : 0;
+.controlRow {
+  display    : flex;
+  align-items: flex-end;
+  flex-wrap  : wrap;
+  gap        : var(--sp-medium) var(--sp-large);
+}
+
+.field {
+  display       : flex;
+  flex-direction: column;
+  gap           : var(--sp-min);
+  min-width     : 14rem;
+}
+
+.fieldLabel {
   color         : var(--gray);
   font-size     : var(--fs-min);
   letter-spacing: var(--letter-spacing-normal);
+  white-space   : nowrap;
 }
 
-.controlsBody {
+.colorField {
   display    : flex;
   align-items: center;
-  flex-wrap  : wrap;
-  gap        : 1rem;
+  gap        : var(--sp-small);
 }
 
-.select {
-  display    : flex;
-  align-items: center;
-  gap        : .5rem;
-  min-width  : 16rem;
+.colorInput {
+  inline-size  : 2.25rem;
+  block-size   : 1.75rem;
+  padding      : 0;
+  border       : 1px solid var(--border-color);
+  border-radius: var(--radius-small);
+  background   : none;
+  cursor       : pointer;
 }
 
-.selectNote {
-  color      : var(--gray);
-  font-size  : var(--fs-min);
-  white-space: nowrap;
+.reset {
+  margin-inline-start: auto;
+  padding            : .35rem .9rem;
+  border             : 1px solid var(--border-color);
+  border-radius      : 999px;
+  background-color   : transparent;
+  color              : var(--text-color);
+  font-family        : inherit;
+  font-size          : var(--fs-smaller);
+  letter-spacing     : var(--letter-spacing-narrow);
+  cursor             : pointer;
+
+  &:hover {
+    border-color: var(--primary-color);
+    color       : var(--primary-color);
+  }
+}
+
+.previewHeader {
+  display       : flex;
+  flex-direction: column;
+  gap           : var(--sp-min);
+}
+
+.preview {
+  container-type  : inline-size;
+  padding         : var(--sp-large);
+  border          : 1px solid var(--light-border-color);
+  border-radius   : var(--radius-size);
+  background-color: var(--base-color);
+  color           : var(--text-color);
 }
 </style>

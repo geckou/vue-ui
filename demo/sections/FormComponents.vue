@@ -437,9 +437,13 @@ const formState = () => JSON.stringify({
         @closeModal="isModalShown = false"
       >
         <template #header>
-          <h4 :class="$style.modalHeading">確認</h4>
+          <h4 :class="$style.modalHeading">
+            確認
+          </h4>
         </template>
-        <p :class="$style.plain">この内容で送信します。よろしいですか？</p>
+        <p :class="$style.plain">
+          この内容で送信します。よろしいですか？
+        </p>
         <template #footer>
           <BasicButton
             buttonType="button"

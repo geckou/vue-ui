@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import CodeBlock from '~demo/components/CodeBlock.vue'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   id?: string
   title: string
   description?: string
@@ -24,7 +24,9 @@ const isCodeOpen = ref(false)
     :class="$style.section"
   >
     <header :class="$style.header">
-      <h3 :class="$style.title">{{ title }}</h3>
+      <h3 :class="$style.title">
+        {{ title }}
+      </h3>
       <p
         v-if="description"
         :class="$style.description"
