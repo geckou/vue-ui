@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { ref, computed, watch, watchEffect } from 'vue'
+import { ref, computed, onBeforeUnmount, watch, watchEffect } from 'vue'
 import { FormValidationManager } from '@/scripts/form-validation-manager'
 import InputBox from '@/components/InputBox.vue'
 import KeyboardArrowDownIcon from '@/components/Icon/KeyboardArrowDownIcon.vue'
@@ -48,10 +48,18 @@ const monthOptions = computed(() => {
   })
 })
 
+const daysInSelectedMonth = computed(() => {
+  const month = Number(birthday.value?.month)
+  if (!month) return 31
+
+  // 年が未選択のときは閏年を含む最大日数になるよう 2000 年を使う
+  const year = Number(birthday.value?.year) || 2000
+  return new Date(year, month, 0).getDate()
+})
+
 const dayOptions = computed(() => {
   const days = []
-  const baseYear = 2000
-  const daysInMouth = new Date(baseYear, Number(birthday.value?.month), 0).getDate()
+  const daysInMouth = daysInSelectedMonth.value
 
   for (let day = 1; day <= daysInMouth; day++) {
     const dayString = day.toString()
@@ -78,6 +86,12 @@ const selectItem = (event: Event, key: 'year' | 'day' | 'month') => {
   birthday.value = { ...birthday.value, [key]: value }
 }
 
+// 月や年を変えて日が存在しなくなった場合は、その月の末日に丸める
+watch(daysInSelectedMonth, days => {
+  const day = Number(birthday.value.day)
+  if (day && day > days) birthday.value = { ...birthday.value, day: String(days).padStart(2, '0') }
+})
+
 watchEffect(() => {
   if (props.modelValue) {
     const [year, month, day] = props.modelValue.split('-')
@@ -99,8 +113,16 @@ watch(() => birthday.value, newValue => {
 
   if (isEmpty) emit('update:modelValue', '')
   else if (!isFilled) return
-  else emit('update:modelValue', [newValue.year, newValue.month, newValue.day].filter(Boolean).join('-'))
+  else {
+    const parts = props.type === 'month'
+      ? [newValue.year, newValue.month]
+      : [newValue.year, newValue.month, newValue.day]
+    emit('update:modelValue', parts.filter(Boolean).join('-'))
+  }
 }, { deep: true })
+
+// アンマウント後も無効判定が残らないように登録を解除する
+onBeforeUnmount(() => props.formValidationManager?.remove(props.name))
 </script>
 
 <template>

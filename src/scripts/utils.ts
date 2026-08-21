@@ -16,7 +16,13 @@ export const returnTagList = (articleObject: Article): string[] => {
   return terms.map((tag: WpTerm) => tag.name)
 }
 
-export const returnArticlePath = (postConfig: PostConfig, domain: string, articleId: string) => `https://${domain}/${postConfig.article_page_path}?${postConfig.query_key_name}=${articleId}`
+export const returnArticlePath = (postConfig: PostConfig, domain: string, articleId: string) => {
+  // ドメイン末尾とパス先頭のスラッシュが重ならないようにする
+  const base = String(domain).replace(/\/+$/, '')
+  const path = String(postConfig.article_page_path ?? '').replace(/^\/+/, '')
+
+  return `https://${base}/${path}?${postConfig.query_key_name}=${articleId}`
+}
 
 /**
  * 各カードは postConfig.author / category / tag を参照するが、

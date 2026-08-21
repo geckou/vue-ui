@@ -1,3 +1,9 @@
+<script lang="ts">
+// スクロールロックはページ全体で 1 つの状態として扱う
+let lockCount = 0
+let previousOverflow = ''
+</script>
+
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, watch } from 'vue'
 import IconClose from '@/components/Icon/CloseIcon.vue'
@@ -9,15 +15,20 @@ const props = defineProps<{
 
 const emit = defineEmits<{ (e: 'closeModal', state: boolean): void }>()
 const bodyElement = document.querySelector('body') as HTMLElement
-let previousOverflow = ''
+// 複数のモーダルが重なっても解除順で壊れないよう、ロック数をカウントする
+let isLocked = false
 
 const toggleScrollLock = (shouldLock: boolean) => {
-  if (!bodyElement) return
+  if (!bodyElement || isLocked === shouldLock) return
 
-  if (shouldLock) {
+  isLocked = shouldLock
+  lockCount += shouldLock ? 1 : -1
+
+  if (lockCount === 1 && shouldLock) {
     previousOverflow = bodyElement.style.overflow
     bodyElement.style.overflow = 'hidden'
-  } else {
+  } else if (lockCount <= 0) {
+    lockCount = 0
     bodyElement.style.overflow = previousOverflow
   }
 }

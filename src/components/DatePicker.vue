@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { ref, reactive, watch } from 'vue'
+import { onBeforeUnmount, ref, reactive, watch } from 'vue'
 import { FormValidationManager } from '@/scripts/form-validation-manager'
 import InputBox from '@/components/InputBox.vue'
 import CalendarIcon from '@/components/Icon/CalendarIcon.vue'
@@ -50,13 +50,15 @@ const validateObject = (object: {
   month: string
   day?: string
 }) => {
-  const { year, month, day } = object
+  const { year, month } = object
+  // 月選択のときは日を検証対象から外す（引数のオブジェクトは書き換えない）
+  const day = props.type === 'month' ? '' : object.day ?? ''
   const requiredCheck = (value: string | undefined) => props.isRequired && !value
   const isNumeric = (value: string) => /^\d+$/.test(value)
+  const required = props.type === 'month' ? [year, month] : [year, month, day]
 
-  if (props.type === 'month') delete object.day
-  if (Object.values(object).every(value => !value) && !props.isRequired) return { isValid: true, message: '' }
-  if ([year, month, day].some(requiredCheck)) return { isValid: false, message: '必須項目です' }
+  if (required.every(value => !value) && !props.isRequired) return { isValid: true, message: '' }
+  if (required.some(requiredCheck)) return { isValid: false, message: '必須項目です' }
   if (year.length !== 4 || !isNumeric(year)) return { isValid: false, message: '年は4桁の数字で入力してください' }
   if (month.length !== 2 || !isNumeric(month)) return { isValid: false, message: '月は2桁の数字で入力してください' }
   if (day && (day.length !== 2 || !isNumeric(day))) return { isValid: false, message: '日は2桁の数字で入力してください' }
@@ -72,10 +74,18 @@ const validateObject = (object: {
 }
 
 const setDateObject = (value: string): void => {
-  const [year, month, day] = value.split('-')
+  const [year = '', month = '', day = ''] = value.split('-')
   dateObject.year = year
   dateObject.month = month
-  if (day) dateObject.day = day
+  // 値に日が含まれない場合は前の入力を残さない
+  dateObject.day = props.type === 'month' ? '' : day
+}
+
+/** 年月日から入力欄の値（YYYY-MM-DD / YYYY-MM）を組み立てる */
+const composeDateValue = (): string => {
+  const { year, month, day } = dateObject
+  const parts = props.type === 'month' ? [year, month] : [year, month, day]
+  return parts.every(Boolean) ? parts.join('-') : ''
 }
 
 watch(() => dateValue.value, newValue => {
@@ -89,26 +99,46 @@ watch(() => dateValue.value, newValue => {
 watch(() => dateObject, newValue => {
   const { isValid, message } = validateObject(newValue)
   errorMessage.value = message
-  const { year, month, day } = dateObject
-  const value = [year, month, day].filter(Boolean).join('-')
   setValid(isValid)
-  if (isValid) dateValue.value = value
+  if (isValid) dateValue.value = composeDateValue()
 }, { deep: true })
+
+/**
+ * modelValue を入力欄の値に反映する。
+ * new Date().toISOString() はタイムゾーン分ずれるため、
+ * 日付部分を取り出せる文字列はそのまま使い、それ以外はローカル日付として整形する
+ */
+const formatDateValue = (value: string): string => {
+  const matched = value.match(/^(\d{4})-(\d{2})(?:-(\d{2}))?/)
+  const pad = (numberValue: number) => String(numberValue).padStart(2, '0')
+
+  if (matched) {
+    const [, year, month, day] = matched
+    if (props.type === 'month') return `${year}-${month}`
+    return day ? `${year}-${month}-${day}` : ''
+  }
+
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return ''
+
+  const year = parsed.getFullYear()
+  const month = pad(parsed.getMonth() + 1)
+  const day = pad(parsed.getDate())
+
+  return props.type === 'month' ? `${year}-${month}` : `${year}-${month}-${day}`
+}
 
 const applyModelValue = (value: string): void => {
   if (!value) {
     dateValue.value = ''
+    setDateObject('')
+    errorMessage.value = ''
+    setValid(validateInput('').isValid)
     return
   }
 
-  const parsed = new Date(value)
-  if (Number.isNaN(parsed.getTime())) return
-
-  const formatted = props.type === 'month'
-    ? parsed.toISOString().slice(0, 7)
-    : parsed.toISOString().slice(0, 10)
-
-  if (formatted === dateValue.value) return
+  const formatted = formatDateValue(value)
+  if (!formatted || formatted === dateValue.value) return
 
   dateValue.value = formatted
   setDateObject(formatted)
@@ -118,6 +148,9 @@ watch(() => props.modelValue, newValue => applyModelValue(newValue))
 
 applyModelValue(props.modelValue)
 setValid(validateInput(dateValue.value).isValid)
+
+// アンマウント後も無効判定が残らないように登録を解除する
+onBeforeUnmount(() => props.formValidationManager?.remove(props.name))
 </script>
 
 <template>
